@@ -1,9 +1,12 @@
 ﻿using SOMOID.core.Interfaces;
+using SOMOID.core.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace SOMOID.core.Services
 {
@@ -28,6 +31,23 @@ namespace SOMOID.core.Services
                 return "ok!";
             }
             return "not ok!";
+        }
+
+        
+        public async Task<string> PostApplication(Application model)
+        {
+            var content = SerializeObjectToContent(model);
+            var result = await httpClient.PostAsync("api/application", content);
+            if (result.IsSuccessStatusCode)
+            {
+                return "ok!";
+            }
+            return "not ok!";
+        }
+
+        public static StringContent SerializeObjectToContent(Application content)
+        {
+            return new StringContent(content.ToString(), Encoding.UTF8, "application/xml");
         }
     }
 }

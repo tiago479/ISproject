@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOMOID", "SOMOID\SOMOID.csproj", "{A4796218-878C-4DD7-B74F-9D8D2DA39425}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SOMOID", "SOMOID\SOMOID.csproj", "{A4796218-878C-4DD7-B74F-9D8D2DA39425}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppB", "AppB\AppB.csproj", "{9FDD6691-7287-4958-AE66-18BD350B8605}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppA", "AppA\AppA.csproj", "{B5F947D9-C2F1-41CC-A19F-BDBA72BBDF4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOMOID.core", "SOMOID.core\SOMOID.core.csproj", "{96095CFB-E818-4BBD-B73E-C3B73967C628}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SOMOID.core", "SOMOID.core\SOMOID.core.csproj", "{96095CFB-E818-4BBD-B73E-C3B73967C628}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

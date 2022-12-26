@@ -37,7 +37,7 @@ namespace SOMOID
                 httpClient.BaseAddress = new Uri("http://localhost:5001");
             });
             //services.AddSingleton
-            //services.AddScoped<IDBClient, DBClient>(x => new DBClient("connectionString")) //para criar uma ponte entre a basedados e a nossa aplicação
+            services.AddScoped<ISomoidDB, SomoidDB>(x => new SomoidDB("Data Source=(LocalDB)\\MSSQLLocalDB; AttachDbFilename={0}; Integrated Security = True", "Database.mdf")); //para criar uma ponte entre a basedados e a nossa aplicação
             //services.AddTransient
         }
 
