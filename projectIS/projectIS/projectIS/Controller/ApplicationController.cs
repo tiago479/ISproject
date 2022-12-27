@@ -19,7 +19,7 @@ namespace projectIS.Controller
 
         static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["projectIS.Properties.Settings.ConnDB"].ConnectionString;
 
-        [Route("applications")]
+        [Route("")]
         public IEnumerable<Application> Get()
         {
             try
@@ -58,16 +58,16 @@ namespace projectIS.Controller
         }
 
         // GET api/<controller>/5
-        [Route("application/{id:int}")]
-        public IHttpActionResult GetApplication(int id)
+        [Route("{appName}")]
+        public IHttpActionResult GetApplication(string appName)
         {
             try
             {
                 conn = new SqlConnection(connectionString);
                 conn.Open();
 
-                SqlCommand command = new SqlCommand("SELECT * FROM Application WHERE Id = @id ORDER BY Id", conn);
-                command.Parameters.AddWithValue("@id", id);
+                SqlCommand command = new SqlCommand("SELECT * FROM Application WHERE Name = @appName ORDER BY Id", conn);
+                command.Parameters.AddWithValue("@appName", appName);
                 SqlDataReader reader = command.ExecuteReader(); // fazemos isto quando estamos a espera de dados, um insert ou update execute nonquery
 
                 if (reader.Read())
@@ -95,7 +95,7 @@ namespace projectIS.Controller
         }
 
         // POST api/<controller>
-        [Route("applications")]
+        [Route("")]
         public IHttpActionResult PostApplication([FromBody] Application app)
         {
 
@@ -123,8 +123,8 @@ namespace projectIS.Controller
         }
 
         // PUT api/<controller>/5
-        [Route("applications/{id}")]
-        public IHttpActionResult PutApplication(int id, [FromBody] Application ap)
+        [Route("{appName}")]
+        public IHttpActionResult PutApplication(string appName, [FromBody] Application ap)
         {
             SqlConnection conn = null;
             try
@@ -132,10 +132,10 @@ namespace projectIS.Controller
                 conn = new SqlConnection(connectionString);
                 conn.Open();
 
-                string str = "UPDATE Application set name= @name WHERE Id = @id";
+                string str = "UPDATE Application set name= @name WHERE Name = @appName";
                 SqlCommand command = new SqlCommand(str, conn);
                 command.Parameters.AddWithValue("@name", ap.Name);
-                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@appName", appName);
                 int rows = command.ExecuteNonQuery();
                 conn.Close();
             }
@@ -151,8 +151,8 @@ namespace projectIS.Controller
         }
 
 
-        [Route("Applications/{id}")]
-        public IHttpActionResult DeleteApplication(int id)
+        [Route("{appName}")]
+        public IHttpActionResult DeleteApplication(string appName)
         {
             SqlConnection conn = null;
             try
@@ -160,10 +160,9 @@ namespace projectIS.Controller
                 conn = new SqlConnection(connectionString);
                 conn.Open();
 
-                string str = "DELETE FROM Application WHERE Id = @id";
+                string str = "DELETE FROM Application WHERE Name = @appName";
                 SqlCommand command = new SqlCommand(str, conn);
-                command.Parameters.AddWithValue("@id", id);
-
+                command.Parameters.AddWithValue("@appName", appName);
                 int rows = command.ExecuteNonQuery();
                 conn.Close();
             }

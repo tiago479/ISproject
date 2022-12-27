@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace projectIS.Controller
 {
+    [RoutePrefix("api/somiod/{app:Application}")]
     public class ModuleController : ApiController
     {
         // GET api/<controller>
