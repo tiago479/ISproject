@@ -19,17 +19,18 @@ namespace projectIS.Controller
 
         static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["projectIS.Properties.Settings.ConnDB"].ConnectionString;
 
-        [Route("")]
-        public IEnumerable<Application> Get()
+        [HttpGet, Route("")]
+        public IEnumerable<Application> GetApplications()
         {
+            //new nome da class tras....
+
             try
             {
                 conn = new SqlConnection(connectionString);
                 conn.Open();
 
                 SqlCommand command = new SqlCommand("SELECT * FROM Application ORDER BY Id", conn);
-                SqlDataReader reader = command.ExecuteReader(); // fazemos isto quando estamos a espera de dados, um insert ou update execute nonquery
-                                                                //commamnd devolve data reader (tipo iterador)
+                SqlDataReader reader = command.ExecuteReader(); 
                 while (reader.Read())
                 {
                     app = new Application
@@ -57,6 +58,7 @@ namespace projectIS.Controller
             return apps;
         }
 
+        /*
         // GET api/<controller>/5
         [Route("{appName}")]
         public IHttpActionResult GetApplication(string appName)
@@ -68,7 +70,7 @@ namespace projectIS.Controller
 
                 SqlCommand command = new SqlCommand("SELECT * FROM Application WHERE Name = @appName ORDER BY Id", conn);
                 command.Parameters.AddWithValue("@appName", appName);
-                SqlDataReader reader = command.ExecuteReader(); // fazemos isto quando estamos a espera de dados, um insert ou update execute nonquery
+                SqlDataReader reader = command.ExecuteReader(); 
 
                 if (reader.Read())
                 {
@@ -93,12 +95,12 @@ namespace projectIS.Controller
 
             return Ok(app);
         }
+        
 
         // POST api/<controller>
-        [Route("")]
+        [HttpPost, Route("")]
         public IHttpActionResult PostApplication([FromBody] Application app)
         {
-
             try
             {
                 conn = new SqlConnection(connectionString);
@@ -123,7 +125,7 @@ namespace projectIS.Controller
         }
 
         // PUT api/<controller>/5
-        [Route("{appName}")]
+        [HttpPut, Route("{appName}")]
         public IHttpActionResult PutApplication(string appName, [FromBody] Application ap)
         {
             SqlConnection conn = null;
@@ -150,8 +152,7 @@ namespace projectIS.Controller
             return Ok();
         }
 
-
-        [Route("{appName}")]
+        [HttpDelete, Route("{appName}")]
         public IHttpActionResult DeleteApplication(string appName)
         {
             SqlConnection conn = null;
@@ -176,5 +177,6 @@ namespace projectIS.Controller
             }
             return Ok();
         }
+        */
     }
 }
