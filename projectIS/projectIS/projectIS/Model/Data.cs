@@ -10,6 +10,6 @@ namespace projectIS.Model
         public int Id { get; set; } 
         public string Content { get; set; }
         public string Created_at { get; set; }
-        public int ModuleId { get; set; } 
+        public int DataId { get; set; } 
     }
 }
