@@ -6,6 +6,7 @@ using System.Web.Http;
 
 namespace projectIS.Controller
 {
+    /*
     [RoutePrefix("api/somiod")]
     public class ModuleController : ApiController
     {
@@ -55,13 +56,13 @@ namespace projectIS.Controller
             return mods;
         }
 
-        /*
+        
         // GET api/<controller>/5
         public string Get(int id)
         {
             return "value";
         }
-        */
+        
 
         // POST api/<controller>
         [HttpPost, Route("{appName}")]
@@ -145,5 +146,5 @@ namespace projectIS.Controller
             }
             return Ok();
         }
-    }
+    }*/
 }
