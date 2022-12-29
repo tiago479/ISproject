@@ -101,23 +101,23 @@ namespace projectIS.Controller
         #endregion
 
         /*
-                        public int GetApplicationByName(string name)
-                        {
-                            try
-                            {
-                                Connect();
-                                SetSqlComand("SELECT * FROM applications WHERE name = @name");
-                                SelectByName(name);
-                                Disconnect();
+            public int GetApplicationByName(string name)
+            {
+                try
+                {
+                    Connect();
+                    SetSqlComand("SELECT * FROM applications WHERE name = @name");
+                    SelectByName(name);
+                    Disconnect();
 
-                                return applications.Count() > 0 ? applications[0].Id : -1;
-                            }
-                            catch (Exception exception)
-                            {
-                                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
-                                throw exception;
-                            }
-                        }
+                    return applications.Count() > 0 ? applications[0].Id : -1;
+                }
+                catch (Exception exception)
+                {
+                    if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                    throw exception;
+                }
+            }
         */
 
         #region Post Falta fazer
