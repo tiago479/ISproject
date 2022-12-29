@@ -121,22 +121,20 @@ namespace projectIS.Controller
         */
 
         #region Post Falta fazer
-        public bool Create(Application value)
+        public bool Create(Application app)
         {
-            /*
-             XElement xmlAppName = new XElement("app", from el in app.Elements() select el);
-            string appName = xmlAppName.Value;
-
+            bool validation = false;
             try
             {
                 conn = new SqlConnection(connectionString);
                 conn.Open();
 
-                string str = "INSERT INTO Application (Name, Created_at) values(@name, @Created_at)";
+                string str = "INSERT INTO Application (Name, Creation_dt) values(@name, @Creation_dt)";
                 SqlCommand command = new SqlCommand(str, conn);
-                command.Parameters.AddWithValue("@name", appName);
-                command.Parameters.AddWithValue("@Created_at", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                command.Parameters.AddWithValue("@name", app.Name);
+                command.Parameters.AddWithValue("@Creation_dt", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
                 int rows = command.ExecuteNonQuery();
+                validation = rows > 0; 
                 conn.Close();
             }
             catch (Exception ex)
@@ -147,8 +145,8 @@ namespace projectIS.Controller
                     Console.WriteLine(ex.Message);
                 }
             }
-            */
-            return false;
+            
+            return validation;
         }
         #endregion
 

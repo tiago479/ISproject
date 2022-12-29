@@ -12,14 +12,14 @@ namespace projectIS
         public static void Register(HttpConfiguration config)
         {
             config.Formatters.Clear();
-            //config.Formatters.Add(new XmlMediaTypeFormatter());
-            config.Formatters.Add(new JsonMediaTypeFormatter());
+            config.Formatters.Add(new XmlMediaTypeFormatter());
+            //config.Formatters.Add(new JsonMediaTypeFormatter());
             //config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
                 name: "PostApplication",
-                routeTemplate: "api/somiod/"
+                routeTemplate: "api/somiod"
             );
             config.Routes.MapHttpRoute(
                 name: "PutApplication",

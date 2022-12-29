@@ -7,9 +7,7 @@ using System.Web.Http;
 
 namespace projectIS.Controller
 {
-    
-    [RoutePrefix("api/somiod")]
-    public class ModuleController : ApiController
+/*    public class ModuleController : ApiController
     {
         private SqlConnection conn = null;
         private List<Module> mods = null;
@@ -236,6 +234,7 @@ namespace projectIS.Controller
                 this.modules.Add(module);
             }
         }
-        */
+
     }
+        */
 }
