@@ -147,6 +147,7 @@ namespace projectIS.Controller
         }
         #endregion
 
+        // NO PUT MESMO NECESSARIO O APPNAME NA ROTA ??? NAO ME PARECE !!! JA VAI A INFO NO XML
         #region Put update an application
         [HttpPut, Route("{appName}")]
         public IHttpActionResult PutApplication(string appName, [FromBody] XElement app)
@@ -172,14 +173,17 @@ namespace projectIS.Controller
         }
         #endregion
 
+        //ATENCAO ESTA DAR PROBLEMA NO CASCADE OU SEJA NAO DELETA SE TIVER MODULOS
+
         #region Delete an Application
-        [HttpDelete, Route("{appName}")]
-        public IHttpActionResult DeleteApplication(string appName)
+        [HttpDelete, Route("")]
+        public IHttpActionResult DeleteApplication([FromBody] XElement applicationName)
         {
+            Application model = (Application)xmlconvertToModel("application", applicationName);
             try
             {
                 ApplicationController app = new ApplicationController();
-                bool response = app.Delete(appName);
+                bool response = app.Delete(model.Name);
                 if (!response)
                 {
                     return BadRequest("Operation Failed");
