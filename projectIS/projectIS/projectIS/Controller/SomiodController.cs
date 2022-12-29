@@ -111,7 +111,8 @@ namespace projectIS.Controller
             try
             {
                 ApplicationController app = new ApplicationController();
-                Application response = app.GetApplication(id);
+                Application application = app.GetApplication(id);
+                string response = ToXML(application);
                 return Ok(response);
             }
             catch (Exception exception)
