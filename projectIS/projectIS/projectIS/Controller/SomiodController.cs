@@ -48,8 +48,6 @@ namespace projectIS.Controller
         }
         #endregion
 
-        #region Application CRUD
-
         #region Get all applications 
         [HttpGet, Route("")]
         public IHttpActionResult GetApplications()
@@ -84,7 +82,7 @@ namespace projectIS.Controller
         }
         #endregion
 
-        #region Post a new application Aplication controller esta em xml
+        #region Post a new application
         [HttpPost, Route("")]
         public IHttpActionResult PostApplication([FromBody] XElement app)
         {
@@ -92,12 +90,12 @@ namespace projectIS.Controller
 
             if (model == null)
             {
-                return BadRequest("Please provide the required information for this request.");
+                return BadRequest("Bad data for the request.");
             }
 
             if (model.Res_type != "application")
             {
-                return BadRequest("Request type is different from 'application'.");
+                return BadRequest("Request type is not a 'application'.");
             }
 
             try
@@ -108,7 +106,7 @@ namespace projectIS.Controller
                 {
                     return BadRequest("Operation Failed");
                 }
-                return Ok("A new application was stored with success!");
+                return Ok("A new application was created");
             }
             catch (Exception exception)
             {
@@ -117,18 +115,26 @@ namespace projectIS.Controller
         }
         #endregion
 
-        #region Put update an application ERRO 405
+        #region Put update an application
         [HttpPut, Route("{appName}")]
-        public IHttpActionResult PutApplication(string appName, [FromBody] Application model)
+        public IHttpActionResult PutApplication(string appName, [FromBody] XElement app)
         {
+            Application model = (Application)xmlconvertToModel("application", app);
+
             if (model == null)
             {
-                return BadRequest("Please provide the required information for this request.");
+                return BadRequest("Invalid data.");
             }
+
+            if (model.Res_type != "application")
+            {
+                return BadRequest("Request type is different from 'application'.");
+            }
+
             try
             {
-                ApplicationController app = new ApplicationController();
-                bool response = app.Update(model, appName);
+                ApplicationController application = new ApplicationController();
+                bool response = application.Update(model, appName);
                 if (!response)
                 {
                     return BadRequest("Operation Failed");
@@ -154,15 +160,13 @@ namespace projectIS.Controller
                 {
                     return BadRequest("Operation Failed");
                 }
-                return Ok("Application was deleted successfully!");
+                return Ok("Application was deleted");
             }
             catch (Exception exception)
             {
                 return InternalServerError(exception);
             }
         }
-        #endregion
-
         #endregion
 
     }

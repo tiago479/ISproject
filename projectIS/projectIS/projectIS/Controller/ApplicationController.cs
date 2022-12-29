@@ -100,27 +100,7 @@ namespace projectIS.Controller
         }
         #endregion
 
-        /*
-            public int GetApplicationByName(string name)
-            {
-                try
-                {
-                    Connect();
-                    SetSqlComand("SELECT * FROM applications WHERE name = @name");
-                    SelectByName(name);
-                    Disconnect();
-
-                    return applications.Count() > 0 ? applications[0].Id : -1;
-                }
-                catch (Exception exception)
-                {
-                    if (conn.State == System.Data.ConnectionState.Open) Disconnect();
-                    throw exception;
-                }
-            }
-        */
-
-        #region Post Falta fazer
+        #region Create Application
         public bool Create(Application app)
         {
             bool validation = false;
@@ -134,7 +114,7 @@ namespace projectIS.Controller
                 command.Parameters.AddWithValue("@name", app.Name);
                 command.Parameters.AddWithValue("@Creation_dt", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
                 int rows = command.ExecuteNonQuery();
-                validation = rows > 0; 
+                validation = rows > 0;
                 conn.Close();
             }
             catch (Exception ex)
@@ -145,7 +125,7 @@ namespace projectIS.Controller
                     Console.WriteLine(ex.Message);
                 }
             }
-            
+
             return validation;
         }
         #endregion
@@ -159,10 +139,10 @@ namespace projectIS.Controller
                 conn = new SqlConnection(connectionString);
                 conn.Open();
 
-                string str = "UPDATE Application set name= @name WHERE Name = @appName";
+                string str = "UPDATE Application set Name= @name WHERE Name = @appName";
                 SqlCommand command = new SqlCommand(str, conn);
-                command.Parameters.AddWithValue("@name", name);
-                command.Parameters.AddWithValue("@appName", value.Name);
+                command.Parameters.AddWithValue("@name", value.Name);
+                command.Parameters.AddWithValue("@appName", name);
                 int rows = command.ExecuteNonQuery();
                 validation = rows > 0;
                 conn.Close();
