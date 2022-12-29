@@ -13,34 +13,36 @@ using projectIS.Model;
 
 namespace projectIS.Controller
 {
-    [RoutePrefix("api/somiod")]
     public class ApplicationController : ApiController
     {
-        List<Application> apps = new List<Application>();
-        SqlConnection conn = null;
-        Application app = null;
+        private List<Application> apps = new List<Application>();
+        private SqlConnection conn = null;
+        private Application app = null;
 
-        static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["projectIS.Properties.Settings.ConnDB"].ConnectionString;
+        private static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["projectIS.Properties.Settings.ConnDB"].ConnectionString;
 
-        #region READ ALL 
-
-        [HttpGet, Route("")]
-        public IEnumerable<Application> GetApplications()
+        public ApplicationController()
         {
+            this.apps = new List<Application>();
+        }
+
+        #region Get All
+        public List<Application> GetApplications()
+        {
+            apps = new List<Application>();
+            conn = new SqlConnection(connectionString);
+            conn.Open();
             try
             {
-                conn = new SqlConnection(connectionString);
-                conn.Open();
-
-                SqlCommand command = new SqlCommand("SELECT * FROM Application ORDER BY Id", conn);
-                SqlDataReader reader = command.ExecuteReader(); 
+                SqlCommand command = new SqlCommand("SELECT * FROM Application", conn);
+                SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
                     app = new Application
                     {
                         Name = (string)reader["Name"],
                         Id = (int)reader["Id"],
-                        Created_at = (string)reader["Created_at"],
+                        Creation_dt = (string)reader["Creation_dt"]
                     };
                     apps.Add(app);
 
@@ -48,26 +50,21 @@ namespace projectIS.Controller
                 reader.Close();
                 conn.Close();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
                     conn.Close();
-                    Console.WriteLine(ex.Message);
                 }
-
+                throw exception;
             }
 
             return apps;
         }
-
         #endregion
 
-        #region READ BY ID
-
-        // GET api/<controller>/5
-        [HttpGet, Route("{id}")]
-        public IHttpActionResult GetApplication(int id)
+        #region Get by id
+        public Application GetApplication(int id)
         {
             try
             {
@@ -76,7 +73,7 @@ namespace projectIS.Controller
 
                 SqlCommand command = new SqlCommand("SELECT * FROM Application WHERE Id = @id ORDER BY Id", conn);
                 command.Parameters.AddWithValue("@id", id);
-                SqlDataReader reader = command.ExecuteReader(); 
+                SqlDataReader reader = command.ExecuteReader();
 
                 if (reader.Read())
                 {
@@ -84,7 +81,7 @@ namespace projectIS.Controller
                     {
                         Name = (string)reader["Name"],
                         Id = (int)reader["Id"],
-                        Created_at = (string)reader["Created_at"],
+                        Creation_dt = (string)reader["Creation_dt"],
                     };
                 }
                 reader.Close();
@@ -99,19 +96,35 @@ namespace projectIS.Controller
                 }
             }
 
-            return Ok(app);
+            return app;
         }
-
         #endregion
 
-        #region CREATE
+        /*
+                        public int GetApplicationByName(string name)
+                        {
+                            try
+                            {
+                                Connect();
+                                SetSqlComand("SELECT * FROM applications WHERE name = @name");
+                                SelectByName(name);
+                                Disconnect();
 
-        // POST api/<controller>
-        [HttpPost, Route("")]
-        public IHttpActionResult PostApplication([FromBody] XElement app)
+                                return applications.Count() > 0 ? applications[0].Id : -1;
+                            }
+                            catch (Exception exception)
+                            {
+                                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                                throw exception;
+                            }
+                        }
+        */
+
+        #region Post Falta fazer
+        public bool Create(Application value)
         {
-
-            XElement xmlAppName = new XElement("app", from el in app.Elements() select el);
+            /*
+             XElement xmlAppName = new XElement("app", from el in app.Elements() select el);
             string appName = xmlAppName.Value;
 
             try
@@ -134,17 +147,15 @@ namespace projectIS.Controller
                     Console.WriteLine(ex.Message);
                 }
             }
-            return Ok();
+            */
+            return false;
         }
-
         #endregion
 
-        #region UPDATE
-        // PUT api/<controller>/5
-        [HttpPut, Route("{appName}")]
-        public IHttpActionResult PutApplication(string appName, [FromBody] Application ap)
+        #region Put
+        public bool Update(Application value, string name)
         {
-            SqlConnection conn = null;
+            bool validation = false;
             try
             {
                 conn = new SqlConnection(connectionString);
@@ -152,9 +163,10 @@ namespace projectIS.Controller
 
                 string str = "UPDATE Application set name= @name WHERE Name = @appName";
                 SqlCommand command = new SqlCommand(str, conn);
-                command.Parameters.AddWithValue("@name", ap.Name);
-                command.Parameters.AddWithValue("@appName", appName);
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@appName", value.Name);
                 int rows = command.ExecuteNonQuery();
+                validation = rows > 0;
                 conn.Close();
             }
             catch (Exception ex)
@@ -165,16 +177,14 @@ namespace projectIS.Controller
                     Console.WriteLine(ex.Message);
                 }
             }
-            return Ok();
+            return validation;
         }
+        #endregion
 
-        #endregion PUTS
-
-        #region DELETE
-        [HttpDelete, Route("{appName}")]
-        public IHttpActionResult DeleteApplication(string appName)
+        #region Delete
+        public bool Delete(string name)
         {
-            SqlConnection conn = null;
+            bool validation = false;
             try
             {
                 conn = new SqlConnection(connectionString);
@@ -182,8 +192,9 @@ namespace projectIS.Controller
 
                 string str = "DELETE FROM Application WHERE Name = @appName";
                 SqlCommand command = new SqlCommand(str, conn);
-                command.Parameters.AddWithValue("@appName", appName);
+                command.Parameters.AddWithValue("@appName", name);
                 int rows = command.ExecuteNonQuery();
+                validation = rows > 0;
                 conn.Close();
             }
             catch (Exception ex)
@@ -194,11 +205,8 @@ namespace projectIS.Controller
                     Console.WriteLine(ex.Message);
                 }
             }
-            return Ok();
+            return validation;
         }
-
-        #endregion DELETES
-
+        #endregion
     }
-
 }

@@ -131,10 +131,13 @@
     <Compile Include="Controller\ApplicationController.cs" />
     <Compile Include="Controller\DataController.cs" />
     <Compile Include="Controller\ModuleController.cs" />
+    <Compile Include="Controller\SomiodController.cs" />
     <Compile Include="Controller\SubscriptionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Model\ApplicationList.cs" />
+    <Compile Include="Model\RequestType.cs" />
     <Compile Include="Model\Application.cs" />
     <Compile Include="Model\Data.cs" />
     <Compile Include="Model\Module.cs" />

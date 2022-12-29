@@ -12,10 +12,9 @@ namespace projectIS.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Application
-    { 
-        public int Id { get; set; }
+    public partial class Application : RequestType
+    {
         public string Name { get; set; }
-        public string Created_at { get; set; }
+        private List<Module> Modules { get; set; }
     }
 }

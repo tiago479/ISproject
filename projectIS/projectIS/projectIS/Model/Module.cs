@@ -5,11 +5,11 @@ using System.Web;
 
 namespace projectIS.Model
 {
-    public class Module
+    public class Module : RequestType
     {
-        public int Id { get; set; }
         public string Name { get; set; }
-        public string Created_at { get; set; }
-        public int ApplicationId { get; set; }
+        public int Parent { get; set; }
+        private List<Data> Datas { get; set; }
+        private List<Subscription> Subscriptions { get; set; }
     }
 }
