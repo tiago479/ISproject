@@ -93,7 +93,8 @@ namespace projectIS.Controller
             try
             {
                 ApplicationController app = new ApplicationController();
-                List<Application> response = app.GetApplications();
+                List<Application> applications = app.GetApplications();
+                string response = ToXML(applications);
                 return Ok(response);
             }
             catch (Exception exception)
