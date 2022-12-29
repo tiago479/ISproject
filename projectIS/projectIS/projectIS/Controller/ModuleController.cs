@@ -2,23 +2,28 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Web.Http;
 
 namespace projectIS.Controller
 {
-    /*
+    
     [RoutePrefix("api/somiod")]
     public class ModuleController : ApiController
     {
-            SqlConnection conn = null;
-            List<Module> mods = new List<Module>();
-            Module mod = null;
+        private SqlConnection conn = null;
+        private List<Module> mods = null;
+        private Module mod = null;
 
-        static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["projectIS.Properties.Settings.ConnDB"].ConnectionString;
-
-        [HttpGet, Route("{appName}")]
-        public IEnumerable<Module> GetModules(string appName)
+        private static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["projectIS.Properties.Settings.ConnDB"].ConnectionString;
+        public ModuleController()
         {
+            this.mods = new List<Module>();
+        }
+
+        public List<Module> GetModules(string name)
+        {
+
             try
             {
                 conn = new SqlConnection(connectionString);
@@ -26,8 +31,8 @@ namespace projectIS.Controller
 
                 SqlCommand command = new SqlCommand("SELECT * FROM Module WHERE ApplicationId in " +
                     "(SELECT Id FROM Application WHERE Name = @appName)", conn);
-                command.Parameters.AddWithValue("@appName", appName);
-                SqlDataReader reader = command.ExecuteReader(); 
+                command.Parameters.AddWithValue("@appName", name);
+                SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
                     mod = new Module
@@ -56,95 +61,181 @@ namespace projectIS.Controller
             return mods;
         }
 
-        
-        // GET api/<controller>/5
-        public string Get(int id)
+                #region Get All
+        public List<Application> GetApplications()
         {
-            return "value";
-        }
-        
-
-        // POST api/<controller>
-        [HttpPost, Route("{appName}")]
-        public IHttpActionResult PostModule(string appName, [FromBody] Module mod)
-        {
+            apps = new List<Application>();
+            conn = new SqlConnection(connectionString);
+            conn.Open();
             try
             {
-                conn = new SqlConnection(connectionString);
-                conn.Open();
+                SqlCommand command = new SqlCommand("SELECT * FROM Application", conn);
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    app = new Application
+                    {
+                        Name = (string)reader["Name"],
+                        Id = (int)reader["Id"],
+                        Creation_dt = (string)reader["Creation_dt"]
+                    };
+                    apps.Add(app);
 
-                string str = "INSERT INTO Module (Name, Created_at, ApplicationId) values(@name, @Created_at, " +
-                    "(Select id From Application where name = @appName))";
-                SqlCommand command = new SqlCommand(str, conn);
-                command.Parameters.AddWithValue("@name", mod.Name);
-                command.Parameters.AddWithValue("@Created_at", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                command.Parameters.AddWithValue("@appName", appName);
-                int rows = command.ExecuteNonQuery();
+                }
+                reader.Close();
                 conn.Close();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
                     conn.Close();
-                    Console.WriteLine(ex.Message);
                 }
+                throw exception;
             }
-            return Ok();
-        }
 
-        [HttpPut, Route("{modName}")]
-        public IHttpActionResult PutModule(string modName, [FromBody] Module mod)
+            return apps;
+        }
+        #endregion
+
+        /*
+        public Module GetModule(int id)
         {
-            SqlConnection conn = null;
             try
             {
-                conn = new SqlConnection(connectionString);
-                conn.Open();
+                Connect();
+                SetSqlComand("SELECT * FROM modules WHERE Id=@id");
+                Select(id);
+                Disconnect();
 
-                string str = "UPDATE Module set name= @name WHERE Name = @modName";
-                SqlCommand command = new SqlCommand(str, conn);
-                command.Parameters.AddWithValue("@name", mod.Name);
-                command.Parameters.AddWithValue("@appName", modName);
-                int rows = command.ExecuteNonQuery();
-                conn.Close();
+                if (this.modules[0] == null)
+                {
+                    return null;
+                }
+                return this.modules[0];
+
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                //fechar ligação à DB
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
-                    conn.Close();
-                    Console.WriteLine(ex.Message);
+                    Disconnect();
                 }
+                return null;
+                //return BadRequest();
             }
-            return Ok();
         }
 
-        // DELETE api/<controller>/5
-        [HttpDelete, Route("{modName}")]
-        public IHttpActionResult DeleteModule(string modName)
+        public int GetModuleByName(string name)
         {
-            SqlConnection conn = null;
             try
             {
-                conn = new SqlConnection(connectionString);
-                conn.Open();
+                Connect();
+                SetSqlComand("SELECT * FROM modules WHERE name = @name");
+                SelectByName(name);
+                Disconnect();
 
-                string str = "DELETE FROM Module WHERE Name = @modName";
-                SqlCommand command = new SqlCommand(str, conn);
-                command.Parameters.AddWithValue("@modName", modName);
-                int rows = command.ExecuteNonQuery();
-                conn.Close();
+                return modules.Count() > 0 ? modules[0].Id : -1;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    conn.Close();
-                    Console.WriteLine(ex.Message);
-                }
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                return -1;
             }
-            return Ok();
         }
-    }*/
+
+        public bool Store(Module module, int parent_id)
+        {
+            try
+            {
+                Connect();
+
+                string sql = "INSERT INTO modules VALUES (@Name, @Creation_dt, @Parent)";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@Name", module.Name);
+                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
+                cmd.Parameters.AddWithValue("@Parent", parent_id);
+
+                SetSqlComand(sql);
+
+                int numRow = InsertOrUpdate(cmd);
+
+                Disconnect();
+
+                return numRow == 1;
+            }
+            catch (Exception)
+            {
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                return false;
+            }
+        }
+
+        public bool UpdateModule(Module module, int id)
+        {
+            try
+            {
+                Connect();
+
+                string sql = "UPDATE modules SET name = @Name, creation_dt = @Creation_dt WHERE id = @id";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@Name", module.Name);
+                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
+
+                SetSqlComand(sql);
+
+                int numRow = InsertOrUpdate(cmd);
+
+                Disconnect();
+                return numRow == 1;
+            }
+            catch (Exception)
+            {
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                return false;
+            }
+        }
+
+        public bool DeleteModule(int id)
+        {
+            try
+            {
+                Connect();
+                SetSqlComand("DELETE FROM modules WHERE id = @id");
+                int numRow = Delete(id);
+                Disconnect();
+
+                return numRow == 1;
+            }
+            catch (Exception)
+            {
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                return false;
+            }
+        }
+
+        public override void ReaderIterator(SqlDataReader reader)
+        {
+            this.modules = new List<Module>();
+            while (reader.Read())
+            {
+                Module module = new Module
+                {
+                    Id = (int)reader["id"],
+                    Name = (string)reader["name"],
+                    Creation_dt = new DateTime(),//TODO: verificar data
+                    Parent = (int)reader["parent"],
+                };
+
+                this.modules.Add(module);
+            }
+        }
+        */
+    }
 }
