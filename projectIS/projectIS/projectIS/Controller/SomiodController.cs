@@ -126,6 +126,7 @@ namespace projectIS.Controller
         [HttpPost, Route("")]
         public IHttpActionResult PostApplication([FromBody] XElement app)
         {
+            //validar
             Application model = (Application)xmlconvertToModel("application", app);
             modelNull(model);
             modelNotValid(model, "application");
