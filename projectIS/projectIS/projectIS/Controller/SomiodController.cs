@@ -105,7 +105,7 @@ namespace projectIS.Controller
         #endregion
 
         #region Get an application by id
-        [HttpGet, Route("{id}")]
+        [HttpGet, Route("{id:int}")]
         public IHttpActionResult GetApplicationById(int id)
         {
             try

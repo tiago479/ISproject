@@ -37,7 +37,7 @@ namespace projectIS.Controller
                     {
                         Name = (string)reader["Name"],
                         Id = (int)reader["Id"],
-                        Creation_dt = (string)reader["Created_at"],
+                        Creation_dt = (string)reader["Creation_dt"],
                         Parent = (int)reader["Parent"]
                     };
                     mods.Add(mod);

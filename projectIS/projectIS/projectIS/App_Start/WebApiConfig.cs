@@ -22,7 +22,7 @@ namespace projectIS
                 routeTemplate: "api/somiod"
             );
             config.Routes.MapHttpRoute(
-                name: "PutApplication",
+                name: "GetModules",
                 routeTemplate: "api/somiod/{appName}",
                 defaults: new { appName = RouteParameter.Optional }
             );
