@@ -159,9 +159,6 @@ namespace projectIS.Controller
         }
         #endregion
 
-
-        //ATENCAO ESTA DAR PROBLEMA NO CASCADE OU SEJA NAO DELETA SE TIVER MODULOS
-
         #region Delete
         public bool Delete(string name)
         {

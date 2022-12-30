@@ -17,7 +17,7 @@ namespace projectIS.Controller
     public class SomiodController : ApiController
     {
         #region XML to model
-        public RequestType xmlconvertToModel(string request,XElement xml)
+        public RequestType xmlconvertToModel(string request, XElement xml)
         {
             XmlSerializer serializer = null;
             Application app = null;
@@ -50,7 +50,8 @@ namespace projectIS.Controller
         #endregion
 
         #region Bad Request Method
-        public IHttpActionResult modelNull(RequestType model) {
+        public IHttpActionResult modelNull(RequestType model)
+        {
             if (model == null)
             {
                 return BadRequest("Bad data for the request.");
@@ -58,11 +59,11 @@ namespace projectIS.Controller
             return null;
         }
 
-        public IHttpActionResult modelNotValid(RequestType model,string type)
+        public IHttpActionResult modelNotValid(RequestType model, string type)
         {
             if (model.Res_type != type)
             {
-                return BadRequest("Request type is not a "+ type);
+                return BadRequest("Request type is not a " + type);
             }
             return null;
         }
@@ -148,7 +149,6 @@ namespace projectIS.Controller
         }
         #endregion
 
-        // NO PUT MESMO NECESSARIO O APPNAME NA ROTA ??? NAO ME PARECE !!! JA VAI A INFO NO XML
         #region Put update an application
         [HttpPut, Route("")]
         public IHttpActionResult PutApplication([FromBody] XElement app)
@@ -174,8 +174,6 @@ namespace projectIS.Controller
         }
         #endregion
 
-        //ATENCAO ESTA DAR PROBLEMA NO CASCADE OU SEJA NAO DELETA SE TIVER MODULOS
-
         #region Delete an Application
         [HttpDelete, Route("")]
         public IHttpActionResult DeleteApplication([FromBody] XElement applicationName)
@@ -200,9 +198,8 @@ namespace projectIS.Controller
 
         #endregion
 
-        
         #region Module CRUD
-        
+
         #region Get all module 
         [HttpGet, Route("{appName}")]
         public IHttpActionResult GetModules(string appName)
@@ -219,97 +216,99 @@ namespace projectIS.Controller
             }
         }
         #endregion
-        /*
- #region Get an module by id
- [HttpGet, Route("{id}")]
- public IHttpActionResult GetApplicationById(int id)
- {
-     try
-     {
-         ApplicationController app = new ApplicationController();
-         Application response = app.GetApplication(id);
-         return Ok(response);
-     }
-     catch (Exception exception)
-     {
-         return InternalServerError(exception);
-     }
- }
- #endregion
 
- #region Post a new application
- [HttpPost, Route("")]
- public IHttpActionResult PostApplication([FromBody] XElement app)
- {
-     Application model = (Application)xmlconvertToModel("application", app);
-     modelNull(model);
-     modelNotValid(model, "application");
-
-     try
-     {
-         ApplicationController application = new ApplicationController();
-         bool response = application.Create(model);
-         if (!response)
-         {
-             return BadRequest("Operation Failed");
-         }
-         return Ok("A new application was created");
-     }
-     catch (Exception exception)
-     {
-         return InternalServerError(exception);
-     }
- }
- #endregion
-
- #region Put update an application
- [HttpPut, Route("{appName}")]
- public IHttpActionResult PutApplication(string appName, [FromBody] XElement app)
- {
-     Application model = (Application)xmlconvertToModel("application", app);
-     modelNull(model);
-     modelNotValid(model, "application");
-
-     try
-     {
-         ApplicationController application = new ApplicationController();
-         bool response = application.Update(model, appName);
-         if (!response)
-         {
-             return BadRequest("Operation Failed");
-         }
-         return Ok("Application was updated successfully!");
-     }
-     catch (Exception exception)
-     {
-         return InternalServerError(exception);
-     }
- }
- #endregion
-
- #region Delete an Application
- [HttpDelete, Route("{appName}")]
- public IHttpActionResult DeleteApplication(string appName)
- {
-     try
-     {
-         ApplicationController app = new ApplicationController();
-         bool response = app.Delete(appName);
-         if (!response)
-         {
-             return BadRequest("Operation Failed");
-         }
-         return Ok("Application was deleted");
-     }
-     catch (Exception exception)
-     {
-         return InternalServerError(exception);
-     }
- }
- #endregion
-         */
+        #region Get an module by id
+        [HttpGet, Route("{appName}/{id:int}")]
+        public IHttpActionResult GetModuleById(int id)
+        {
+            try
+            {
+                ModuleController mod = new ModuleController();
+                Module response = mod.GetModule(id);
+                return Ok(response);
+            }
+            catch (Exception exception)
+            {
+                return InternalServerError(exception);
+            }
+        }
         #endregion
 
+        #region Post a new module
+        [HttpPost, Route("{appName}")]
+        public IHttpActionResult PostModule(string appName, [FromBody] XElement mod)
+        {
+            Module model = (Module)xmlconvertToModel("module", mod);
+            modelNull(model);
+            modelNotValid(model, "module");
+
+            try
+            {
+                ModuleController module = new ModuleController();
+                bool response = module.Create(model, appName);
+                if (!response)
+                {
+                    return BadRequest("Operation Failed");
+                }
+                return Ok("A new application was created");
+            }
+            catch (Exception exception)
+            {
+                return InternalServerError(exception);
+            }
+        }
+        #endregion
+
+        #region Put update an module
+        [HttpPut, Route("{appName}")]
+        public IHttpActionResult PutModule([FromBody] XElement mod)
+        {
+            Module model = (Module)xmlconvertToModel("module", mod);
+            modelNull(model);
+            modelNotValid(model, "module");
+
+            try
+            {
+                ModuleController module = new ModuleController();
+                bool response = module.Update(model);
+                if (!response)
+                {
+                    return BadRequest("Operation Failed");
+                }
+                return Ok("Application was updated successfully!");
+            }
+            catch (Exception exception)
+            {
+                return InternalServerError(exception);
+            }
+        }
+        #endregion
+
+        #region Delete an Application
+        [HttpDelete, Route("{appName}")]
+        public IHttpActionResult DeleteModule([FromBody] XElement mod)
+        {
+            Module model = (Module)xmlconvertToModel("module", mod);
+            try
+            {
+                ModuleController module = new ModuleController();
+                bool response = module.Delete(model.Name);
+                if (!response)
+                {
+                    return BadRequest("Operation Failed");
+                }
+                return Ok("Application was deleted");
+            }
+            catch (Exception exception)
+            {
+                return InternalServerError(exception);
+            }
+
+        }
+        #endregion
+
+        #endregion
+
+         
     }
 }
-       
