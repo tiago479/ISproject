@@ -150,8 +150,8 @@ namespace projectIS.Controller
 
         // NO PUT MESMO NECESSARIO O APPNAME NA ROTA ??? NAO ME PARECE !!! JA VAI A INFO NO XML
         #region Put update an application
-        [HttpPut, Route("{appName}")]
-        public IHttpActionResult PutApplication(string appName, [FromBody] XElement app)
+        [HttpPut, Route("")]
+        public IHttpActionResult PutApplication([FromBody] XElement app)
         {
             Application model = (Application)xmlconvertToModel("application", app);
             modelNull(model);
@@ -160,7 +160,7 @@ namespace projectIS.Controller
             try
             {
                 ApplicationController application = new ApplicationController();
-                bool response = application.Update(model, appName);
+                bool response = application.Update(model);
                 if (!response)
                 {
                     return BadRequest("Operation Failed");

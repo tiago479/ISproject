@@ -131,7 +131,7 @@ namespace projectIS.Controller
         #endregion
 
         #region Put
-        public bool Update(Application value, string name)
+        public bool Update(Application value)
         {
             bool validation = false;
             try
@@ -142,7 +142,7 @@ namespace projectIS.Controller
                 string str = "UPDATE Application set Name= @name WHERE Name = @appName";
                 SqlCommand command = new SqlCommand(str, conn);
                 command.Parameters.AddWithValue("@name", value.Name);
-                command.Parameters.AddWithValue("@appName", name);
+                command.Parameters.AddWithValue("@appName", value.OldName);
                 int rows = command.ExecuteNonQuery();
                 validation = rows > 0;
                 conn.Close();

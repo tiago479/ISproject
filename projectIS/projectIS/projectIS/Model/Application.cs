@@ -15,6 +15,8 @@ namespace projectIS.Model
     public partial class Application : RequestType
     {
         public string Name { get; set; }
+
+        public string OldName { get; set; }
         private List<Module> Modules { get; set; }
     }
 }
