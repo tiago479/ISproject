@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace projectIS.Controller
 {
-/*    public class ModuleController : ApiController
+    public class ModuleController : ApiController
     {
         private SqlConnection conn = null;
         private List<Module> mods = null;
@@ -27,7 +27,7 @@ namespace projectIS.Controller
                 conn = new SqlConnection(connectionString);
                 conn.Open();
 
-                SqlCommand command = new SqlCommand("SELECT * FROM Module WHERE ApplicationId in " +
+                SqlCommand command = new SqlCommand("SELECT * FROM Module WHERE Parent in " +
                     "(SELECT Id FROM Application WHERE Name = @appName)", conn);
                 command.Parameters.AddWithValue("@appName", name);
                 SqlDataReader reader = command.ExecuteReader();
@@ -37,8 +37,8 @@ namespace projectIS.Controller
                     {
                         Name = (string)reader["Name"],
                         Id = (int)reader["Id"],
-                        Created_at = (string)reader["Created_at"],
-                        ApplicationId = (int)reader["ApplicationId"]
+                        Creation_dt = (string)reader["Created_at"],
+                        Parent = (int)reader["Parent"]
                     };
                     mods.Add(mod);
 
@@ -58,7 +58,7 @@ namespace projectIS.Controller
 
             return mods;
         }
-
+        /*
                 #region Get All
         public List<Application> GetApplications()
         {
@@ -96,7 +96,7 @@ namespace projectIS.Controller
         }
         #endregion
 
-        /*
+        
         public Module GetModule(int id)
         {
             try
@@ -234,7 +234,7 @@ namespace projectIS.Controller
                 this.modules.Add(module);
             }
         }
-
+               */
     }
-        */
+
 }

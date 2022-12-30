@@ -200,17 +200,17 @@ namespace projectIS.Controller
 
         #endregion
 
-        /*
+        
         #region Module CRUD
         
         #region Get all module 
-        [HttpGet, Route("")]
-        public IHttpActionResult GetApplications()
+        [HttpGet, Route("{appName}")]
+        public IHttpActionResult GetModules(string appName)
         {
             try
             {
-                ApplicationController app = new ApplicationController();
-                List<Application> response = app.GetApplications();
+                ModuleController mod = new ModuleController();
+                List<Module> response = mod.GetModules(appName);
                 return Ok(response);
             }
             catch (Exception exception)
@@ -219,96 +219,97 @@ namespace projectIS.Controller
             }
         }
         #endregion
+        /*
+ #region Get an module by id
+ [HttpGet, Route("{id}")]
+ public IHttpActionResult GetApplicationById(int id)
+ {
+     try
+     {
+         ApplicationController app = new ApplicationController();
+         Application response = app.GetApplication(id);
+         return Ok(response);
+     }
+     catch (Exception exception)
+     {
+         return InternalServerError(exception);
+     }
+ }
+ #endregion
 
-        #region Get an module by id
-        [HttpGet, Route("{id}")]
-        public IHttpActionResult GetApplicationById(int id)
-        {
-            try
-            {
-                ApplicationController app = new ApplicationController();
-                Application response = app.GetApplication(id);
-                return Ok(response);
-            }
-            catch (Exception exception)
-            {
-                return InternalServerError(exception);
-            }
-        }
+ #region Post a new application
+ [HttpPost, Route("")]
+ public IHttpActionResult PostApplication([FromBody] XElement app)
+ {
+     Application model = (Application)xmlconvertToModel("application", app);
+     modelNull(model);
+     modelNotValid(model, "application");
+
+     try
+     {
+         ApplicationController application = new ApplicationController();
+         bool response = application.Create(model);
+         if (!response)
+         {
+             return BadRequest("Operation Failed");
+         }
+         return Ok("A new application was created");
+     }
+     catch (Exception exception)
+     {
+         return InternalServerError(exception);
+     }
+ }
+ #endregion
+
+ #region Put update an application
+ [HttpPut, Route("{appName}")]
+ public IHttpActionResult PutApplication(string appName, [FromBody] XElement app)
+ {
+     Application model = (Application)xmlconvertToModel("application", app);
+     modelNull(model);
+     modelNotValid(model, "application");
+
+     try
+     {
+         ApplicationController application = new ApplicationController();
+         bool response = application.Update(model, appName);
+         if (!response)
+         {
+             return BadRequest("Operation Failed");
+         }
+         return Ok("Application was updated successfully!");
+     }
+     catch (Exception exception)
+     {
+         return InternalServerError(exception);
+     }
+ }
+ #endregion
+
+ #region Delete an Application
+ [HttpDelete, Route("{appName}")]
+ public IHttpActionResult DeleteApplication(string appName)
+ {
+     try
+     {
+         ApplicationController app = new ApplicationController();
+         bool response = app.Delete(appName);
+         if (!response)
+         {
+             return BadRequest("Operation Failed");
+         }
+         return Ok("Application was deleted");
+     }
+     catch (Exception exception)
+     {
+         return InternalServerError(exception);
+     }
+ }
+ #endregion
+         */
         #endregion
 
-        #region Post a new application
-        [HttpPost, Route("")]
-        public IHttpActionResult PostApplication([FromBody] XElement app)
-        {
-            Application model = (Application)xmlconvertToModel("application", app);
-            modelNull(model);
-            modelNotValid(model, "application");
-
-            try
-            {
-                ApplicationController application = new ApplicationController();
-                bool response = application.Create(model);
-                if (!response)
-                {
-                    return BadRequest("Operation Failed");
-                }
-                return Ok("A new application was created");
-            }
-            catch (Exception exception)
-            {
-                return InternalServerError(exception);
-            }
-        }
-        #endregion
-
-        #region Put update an application
-        [HttpPut, Route("{appName}")]
-        public IHttpActionResult PutApplication(string appName, [FromBody] XElement app)
-        {
-            Application model = (Application)xmlconvertToModel("application", app);
-            modelNull(model);
-            modelNotValid(model, "application");
-
-            try
-            {
-                ApplicationController application = new ApplicationController();
-                bool response = application.Update(model, appName);
-                if (!response)
-                {
-                    return BadRequest("Operation Failed");
-                }
-                return Ok("Application was updated successfully!");
-            }
-            catch (Exception exception)
-            {
-                return InternalServerError(exception);
-            }
-        }
-        #endregion
-
-        #region Delete an Application
-        [HttpDelete, Route("{appName}")]
-        public IHttpActionResult DeleteApplication(string appName)
-        {
-            try
-            {
-                ApplicationController app = new ApplicationController();
-                bool response = app.Delete(appName);
-                if (!response)
-                {
-                    return BadRequest("Operation Failed");
-                }
-                return Ok("Application was deleted");
-            }
-            catch (Exception exception)
-            {
-                return InternalServerError(exception);
-            }
-        }
-        #endregion
-        #endregion
-        */
     }
 }
        
