@@ -8,7 +8,7 @@ namespace projectIS.Model
     public class Data : RequestType
     {
         public string Content { get; set; }
-
+        public string OldContent { get; set; }
         public int Parent { get; set; }
     }
 }

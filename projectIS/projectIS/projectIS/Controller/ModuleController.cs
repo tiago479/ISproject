@@ -158,7 +158,8 @@ namespace projectIS.Controller
             return validation;
         }
         #endregion
-        
+
+        #region Delete
         public bool Delete(string name)
         {
             bool validation = false;
@@ -184,5 +185,7 @@ namespace projectIS.Controller
             }
             return validation;
         }
+        #endregion
+
     }
 }
