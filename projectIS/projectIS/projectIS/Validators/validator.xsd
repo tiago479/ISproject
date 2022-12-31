@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:complexType name="baseType" abstract="true">
+		<xs:sequence>
+			<xs:element name="Name" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="applicationType">
+		<xs:complexContent>
+			<xs:extension base="baseType" />
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="moduleType">
+		<xs:complexContent>
+			<xs:extension base="baseType">
+				<xs:sequence>
+					<xs:element name="Parent" type="xs:integer"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="dataType">
+		<xs:sequence>
+			<xs:element name="Content" type="xs:string" />
+			<xs:element name="Parent" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="subscriptionType">
+		<xs:sequence>
+			<xs:element name="Name" type="xs:string" />
+			<xs:element name="Event" type="xs:string" />
+			<xs:element name="Endpoint" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="resourceType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Application"/>
+			<xs:enumeration value="Module"/>
+			<xs:enumeration value="Data"/>
+			<xs:enumeration value="Subscription"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="resType">
+		<xs:choice>
+			<xs:element name="Application" type="applicationType"/>
+			<xs:element name="Module" type="moduleType"/>
+			<xs:element name="Data" type="dataType"/>
+			<xs:element name="Subscription" type="subscriptionType"/>
+		</xs:choice>
+		<xs:attribute name="type" type="resourceType" use="required"/>
+	</xs:complexType>
+	<xs:element name="Resource" type="resType"/>
+</xs:schema>

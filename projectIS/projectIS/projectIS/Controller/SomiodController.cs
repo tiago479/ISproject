@@ -1,4 +1,5 @@
 ﻿using projectIS.Model;
+using projectIS.Validators;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,28 +21,21 @@ namespace projectIS.Controller
         public RequestType xmlconvertToModel(string request, XElement xml)
         {
             XmlSerializer serializer = null;
-            Application app = null;
-            Module mod = null;
-            Data data = null;
-            Subscription sub = null;
+
             switch (request)
             {
-                case "application":
-                    app = new Application();
+                case "Application":
                     serializer = new XmlSerializer(typeof(Application));
-                    return (Application)serializer.Deserialize(xml.CreateReader());
-                case "module":
-                    mod = new Module();
+                    return (Application)serializer.Deserialize(xml.Element("Application").CreateReader());
+                case "Module":
                     serializer = new XmlSerializer(typeof(Module));
-                    return (Module)serializer.Deserialize(xml.CreateReader());
-                case "data":
-                    data = new Data();
+                    return (Module)serializer.Deserialize(xml.Element("Module").CreateReader());
+                case "Data":
                     serializer = new XmlSerializer(typeof(Data));
-                    return (Data)serializer.Deserialize(xml.CreateReader());
-                case "sub":
-                    sub = new Subscription();
+                    return (Data)serializer.Deserialize(xml.Element("Data").CreateReader());
+                case "Subscription":
                     serializer = new XmlSerializer(typeof(Subscription));
-                    return (Subscription)serializer.Deserialize(xml.CreateReader());
+                    return (Subscription)serializer.Deserialize(xml.Element("Subscription").CreateReader());
                 default:
                     Console.WriteLine("Wrong request string");
                     return null;
@@ -57,6 +51,14 @@ namespace projectIS.Controller
                 return BadRequest("Bad data for the request.");
             }
             return null;
+        }
+
+        public void emptyOrNull(Application model)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException();
+            }
         }
 
         public IHttpActionResult modelNotValid(RequestType model, string type)
@@ -83,7 +85,6 @@ namespace projectIS.Controller
             }
         }
         #endregion
-
 
         #region Aplication CRUD
 
@@ -127,13 +128,28 @@ namespace projectIS.Controller
         [HttpPost, Route("")]
         public IHttpActionResult PostApplication([FromBody] XElement app)
         {
-            //validar
-            Application model = (Application)xmlconvertToModel("application", app);
-            modelNull(model);
-            modelNotValid(model, "application");
-            
+
+            if (app == null)
+            {
+                return BadRequest(new XmlException("Errors in the XML document").ToString());
+            };
+
+            XMLValidator validator = new XMLValidator(app);
+
+            if (!validator.ValidateXML())
+            {
+                return BadRequest(validator.ValidationMessage);
+            }
+
+            // return Ok(string.Format("{0} - {1}", app.Attribute("type").Value, res_type));
+            //validator.resType
+
+            Application model = (Application)xmlconvertToModel("Application", app);
+
             try
             {
+                emptyOrNull(model);
+
                 ApplicationController application = new ApplicationController();
                 bool response = application.Create(model);
                 if (!response)
