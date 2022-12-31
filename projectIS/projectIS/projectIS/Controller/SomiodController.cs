@@ -250,7 +250,7 @@ namespace projectIS.Controller
                 {
                     return BadRequest("Operation Failed");
                 }
-                return Ok("A new application was created");
+                return Ok("A new module was created");
             }
             catch (Exception exception)
             {
@@ -275,7 +275,7 @@ namespace projectIS.Controller
                 {
                     return BadRequest("Operation Failed");
                 }
-                return Ok("Application was updated successfully!");
+                return Ok("module was updated successfully!");
             }
             catch (Exception exception)
             {
@@ -297,7 +297,7 @@ namespace projectIS.Controller
                 {
                     return BadRequest("Operation Failed");
                 }
-                return Ok("Application was deleted");
+                return Ok("module was deleted");
             }
             catch (Exception exception)
             {
@@ -327,7 +327,7 @@ namespace projectIS.Controller
                 {
                     return BadRequest("Operation Failed");
                 }
-                return Ok("A new application was created");
+                return Ok("A new data was created");
             }
             catch (Exception exception)
             {
@@ -351,7 +351,7 @@ namespace projectIS.Controller
                 {
                     return BadRequest("Operation Failed");
                 }
-                return Ok("Application was deleted");
+                return Ok("data was deleted");
             }
             catch (Exception exception)
             {
