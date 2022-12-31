@@ -5,7 +5,7 @@ using System.Web;
 
 namespace projectIS.Model
 {
-    public class Subscription : RequestType
+    public class Subscription : ResourceType
     {
         public string Name { get; set; }
         public int Parent { get; set; }

@@ -5,7 +5,7 @@ using System.Web;
 
 namespace projectIS.Model
 {
-    public class Data : RequestType
+    public class Data : ResourceType
     {
         public string Content { get; set; }
         public string OldContent { get; set; }

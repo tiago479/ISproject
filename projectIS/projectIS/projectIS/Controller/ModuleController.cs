@@ -63,15 +63,17 @@ namespace projectIS.Controller
         #endregion
 
         #region Get by id
-        public Module GetModule(int id)
+        public Module GetModule(int id,string appName)
         {
             try
             {
                 conn = new SqlConnection(connectionString);
                 conn.Open();
 
-                SqlCommand command = new SqlCommand("SELECT * FROM Module WHERE Id = @id ORDER BY Id", conn);
+                SqlCommand command = new SqlCommand("SELECT * FROM Module WHERE Id = @id" +
+                    " AND Parent = (Select Id From Application Where Name = @appName)", conn);
                 command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@appName", appName);
                 SqlDataReader reader = command.ExecuteReader();
 
                 if (reader.Read())

@@ -12,10 +12,9 @@ namespace projectIS.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class RequestType
+    public partial class ResourceType
     {
         public int Id { get; set; }
-        public string Res_type { get; set; }
         public string Creation_dt { get; set; }
     }
 }

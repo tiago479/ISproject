@@ -5,7 +5,7 @@ using System.Web;
 
 namespace projectIS.Model
 {
-    public class Module : RequestType
+    public class Module : ResourceType
     {
         public string Name { get; set; }
 

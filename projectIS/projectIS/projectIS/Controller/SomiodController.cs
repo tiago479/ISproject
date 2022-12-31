@@ -2,12 +2,14 @@
 using projectIS.Validators;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.UI.WebControls;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -18,7 +20,7 @@ namespace projectIS.Controller
     public class SomiodController : ApiController
     {
         #region XML to model
-        public RequestType xmlconvertToModel(string request, XElement xml)
+        public ResourceType xmlconvertToModel(string request, XElement xml)
         {
             XmlSerializer serializer = null;
 
@@ -44,16 +46,7 @@ namespace projectIS.Controller
         #endregion
 
         #region Bad Request Method
-        public IHttpActionResult modelNull(RequestType model)
-        {
-            if (model == null)
-            {
-                return BadRequest("Bad data for the request.");
-            }
-            return null;
-        }
-
-        public void emptyOrNull(Application model)
+        public void emptyOrNull(ResourceType model)
         {
             if (model == null)
             {
@@ -61,14 +54,7 @@ namespace projectIS.Controller
             }
         }
 
-        public IHttpActionResult modelNotValid(RequestType model, string type)
-        {
-            if (model.Res_type != type)
-            {
-                return BadRequest("Request type is not a " + type);
-            }
-            return null;
-        }
+
         #endregion
 
         #region Response in XML
@@ -94,8 +80,8 @@ namespace projectIS.Controller
         {
             try
             {
-                ApplicationController app = new ApplicationController();
-                List<Application> applications = app.GetApplications();
+                ApplicationController controller = new ApplicationController();
+                List<Application> applications = controller.GetApplications();
                 string response = ToXML(applications);
                 return Ok(response);
             }
@@ -112,8 +98,8 @@ namespace projectIS.Controller
         {
             try
             {
-                ApplicationController app = new ApplicationController();
-                Application application = app.GetApplication(id);
+                ApplicationController controller = new ApplicationController();
+                Application application = controller.GetApplication(id);
                 string response = ToXML(application);
                 return Ok(response);
             }
@@ -126,32 +112,28 @@ namespace projectIS.Controller
 
         #region Post a new application
         [HttpPost, Route("")]
-        public IHttpActionResult PostApplication([FromBody] XElement app)
+        public IHttpActionResult PostApplication([FromBody] XElement xml)
         {
-
-            if (app == null)
+            if (xml == null)
             {
                 return BadRequest(new XmlException("Errors in the XML document").ToString());
-            };
-
-            XMLValidator validator = new XMLValidator(app);
+            }
+            XMLValidator validator = new XMLValidator(xml);
 
             if (!validator.ValidateXML())
             {
                 return BadRequest(validator.ValidationMessage);
             }
 
-            // return Ok(string.Format("{0} - {1}", app.Attribute("type").Value, res_type));
-            //validator.resType
+            string res_type = validator.resType;
 
-            Application model = (Application)xmlconvertToModel("Application", app);
+            Application app = (Application)xmlconvertToModel(res_type, xml);
 
             try
             {
-                emptyOrNull(model);
-
-                ApplicationController application = new ApplicationController();
-                bool response = application.Create(model);
+                emptyOrNull(app);
+                ApplicationController controller = new ApplicationController();
+                bool response = controller.Create(app);
                 if (!response)
                 {
                     return BadRequest("Operation Failed");
@@ -167,16 +149,28 @@ namespace projectIS.Controller
 
         #region Put update an application
         [HttpPut, Route("")]
-        public IHttpActionResult PutApplication([FromBody] XElement app)
+        public IHttpActionResult PutApplication([FromBody] XElement xml)
         {
-            Application model = (Application)xmlconvertToModel("application", app);
-            modelNull(model);
-            modelNotValid(model, "application");
+            if (xml == null)
+            {
+                return BadRequest(new XmlException("Errors in the XML document").ToString());
+            }
+            XMLValidator validator = new XMLValidator(xml);
+
+            if (!validator.ValidateXML())
+            {
+                return BadRequest(validator.ValidationMessage);
+            }
+
+            string res_type = validator.resType;
+
+            Application app = (Application)xmlconvertToModel(res_type, xml);
 
             try
             {
-                ApplicationController application = new ApplicationController();
-                bool response = application.Update(model);
+                emptyOrNull(app);
+                ApplicationController controller = new ApplicationController();
+                bool response = controller.Update(app);
                 if (!response)
                 {
                     return BadRequest("Operation Failed");
@@ -192,13 +186,28 @@ namespace projectIS.Controller
 
         #region Delete an Application
         [HttpDelete, Route("")]
-        public IHttpActionResult DeleteApplication([FromBody] XElement applicationName)
+        public IHttpActionResult DeleteApplication([FromBody] XElement xml)
         {
-            Application model = (Application)xmlconvertToModel("application", applicationName);
+            if (xml == null)
+            {
+                return BadRequest(new XmlException("Errors in the XML document").ToString());
+            }
+            XMLValidator validator = new XMLValidator(xml);
+
+            if (!validator.ValidateXML())
+            {
+                return BadRequest(validator.ValidationMessage);
+            }
+
+            string res_type = validator.resType;
+
+            Application app = (Application)xmlconvertToModel(res_type, xml);
+
             try
             {
-                ApplicationController app = new ApplicationController();
-                bool response = app.Delete(model.Name);
+                emptyOrNull(app);
+                ApplicationController controller = new ApplicationController();
+                bool response = controller.Delete(app.Name);
                 if (!response)
                 {
                     return BadRequest("Operation Failed");
@@ -222,8 +231,9 @@ namespace projectIS.Controller
         {
             try
             {
-                ModuleController mod = new ModuleController();
-                List<Module> response = mod.GetModules(appName);
+                ModuleController controller = new ModuleController();
+                List<Module> modules = controller.GetModules(appName);
+                string response = ToXML(modules);
                 return Ok(response);
             }
             catch (Exception exception)
@@ -235,12 +245,14 @@ namespace projectIS.Controller
 
         #region Get an module by id
         [HttpGet, Route("{appName}/{id:int}")]
-        public IHttpActionResult GetModuleById(int id)
+        public IHttpActionResult GetModuleById(string appName, int id)
         {
             try
             {
-                ModuleController mod = new ModuleController();
-                Module response = mod.GetModule(id);
+                ModuleController controller = new ModuleController();
+                Module module = controller.GetModule(id, appName);
+                emptyOrNull(module);
+                string response = ToXML(module);
                 return Ok(response);
             }
             catch (Exception exception)
@@ -252,16 +264,28 @@ namespace projectIS.Controller
 
         #region Post a new module
         [HttpPost, Route("{appName}")]
-        public IHttpActionResult PostModule(string appName, [FromBody] XElement mod)
+        public IHttpActionResult PostModule(string appName, [FromBody] XElement xml)
         {
-            Module model = (Module)xmlconvertToModel("module", mod);
-            modelNull(model);
-            modelNotValid(model, "module");
+            if (xml == null)
+            {
+                return BadRequest(new XmlException("Errors in the XML document").ToString());
+            }
+            XMLValidator validator = new XMLValidator(xml);
+
+            if (!validator.ValidateXML())
+            {
+                return BadRequest(validator.ValidationMessage);
+            }
+
+            string res_type = validator.resType;
+
+            Module mod = (Module)xmlconvertToModel(res_type, xml);
 
             try
             {
-                ModuleController module = new ModuleController();
-                bool response = module.Create(model, appName);
+                emptyOrNull(mod);
+                ModuleController controller = new ModuleController();
+                bool response = controller.Create(mod, appName);
                 if (!response)
                 {
                     return BadRequest("Operation Failed");
@@ -277,16 +301,28 @@ namespace projectIS.Controller
 
         #region Put update an module
         [HttpPut, Route("{appName}")]
-        public IHttpActionResult PutModule([FromBody] XElement mod)
+        public IHttpActionResult PutModule([FromBody] XElement xml)
         {
-            Module model = (Module)xmlconvertToModel("module", mod);
-            modelNull(model);
-            modelNotValid(model, "module");
+            if (xml == null)
+            {
+                return BadRequest(new XmlException("Errors in the XML document").ToString());
+            }
+            XMLValidator validator = new XMLValidator(xml);
+
+            if (!validator.ValidateXML())
+            {
+                return BadRequest(validator.ValidationMessage);
+            }
+
+            string res_type = validator.resType;
+
+            Module mod = (Module)xmlconvertToModel(res_type, xml);
 
             try
             {
-                ModuleController module = new ModuleController();
-                bool response = module.Update(model);
+                emptyOrNull(mod);
+                ModuleController controller = new ModuleController();
+                bool response = controller.Update(mod);
                 if (!response)
                 {
                     return BadRequest("Operation Failed");
@@ -300,15 +336,28 @@ namespace projectIS.Controller
         }
         #endregion
 
-        #region Delete an Application
+        #region Delete an Module
         [HttpDelete, Route("{appName}")]
-        public IHttpActionResult DeleteModule([FromBody] XElement mod)
+        public IHttpActionResult DeleteModule([FromBody] XElement xml)
         {
-            Module model = (Module)xmlconvertToModel("module", mod);
+            if (xml == null)
+            {
+                return BadRequest(new XmlException("Errors in the XML document").ToString());
+            }
+            XMLValidator validator = new XMLValidator(xml);
+
+            if (!validator.ValidateXML())
+            {
+                return BadRequest(validator.ValidationMessage);
+            }
+
+            string res_type = validator.resType;
+
+            Module mod = (Module)xmlconvertToModel(res_type, xml);
             try
             {
-                ModuleController module = new ModuleController();
-                bool response = module.Delete(model.Name);
+                ModuleController controller = new ModuleController();
+                bool response = controller.Delete(mod.Name);
                 if (!response)
                 {
                     return BadRequest("Operation Failed");
@@ -329,49 +378,124 @@ namespace projectIS.Controller
 
         #region Post a new Data
         [HttpPost, Route("{appName}/{modName}")]
-        public IHttpActionResult PostData(string modName, [FromBody] XElement form)
+        public IHttpActionResult PostData(string modName, [FromBody] XElement xml)
         {
-            Data model = (Data)xmlconvertToModel("data", form);
-            modelNull(model);
-            modelNotValid(model, "data");
-            
-            try
+            if (xml == null)
             {
-                DataController data = new DataController();
-                bool response = data.Create(model, modName);
-                if (!response)
-                {
+                return BadRequest(new XmlException("Errors in the XML document").ToString());
+            }
+            XMLValidator validator = new XMLValidator(xml);
+
+            if (!validator.ValidateXML())
+            {
+                return BadRequest(validator.ValidationMessage);
+            }
+
+            string res_type = validator.resType;
+
+            switch (res_type)
+            {
+                case "Data":
+                    Data data = (Data)xmlconvertToModel(res_type, xml);
+
+                    try
+                    {
+                        emptyOrNull(data);
+                        DataController controller = new DataController();
+                        bool response = controller.Create(data, modName);
+                        if (!response)
+                        {
+                            return BadRequest("Operation Failed");
+                        }
+                        return Ok("A new data was created");
+                    }
+                    catch (Exception exception)
+                    {
+                        return InternalServerError(exception);
+                    }
+
+                case "Subscription":
+                    Subscription sub = (Subscription)xmlconvertToModel(res_type, xml);
+
+                    try
+                    {
+                        emptyOrNull(sub);
+                        SubscriptionController controller = new SubscriptionController();
+                        bool response = controller.Create(sub, modName);
+                        if (!response)
+                        {
+                            return BadRequest("Operation Failed");
+                        }
+                        return Ok("A new subscription was created");
+                    }
+                    catch (Exception exception)
+                    {
+                        return InternalServerError(exception);
+                    }
+                default:
                     return BadRequest("Operation Failed");
-                }
-                return Ok("A new data was created");
             }
-            catch (Exception exception)
-            {
-                return InternalServerError(exception);
-            }
+
+
         }
         #endregion
 
         #region Delete an Data
         [HttpDelete, Route("{appName}/{modName}")]
-        public IHttpActionResult DeleteData([FromBody] XElement form)
+        public IHttpActionResult DeleteData([FromBody] XElement xml)
         {
-            Data model = (Data)xmlconvertToModel("data", form);
-            modelNull(model);
-            modelNotValid(model, "data");
-            try
+            if (xml == null)
             {
-                DataController data = new DataController();
-                bool response = data.Delete(model.Id);
-                if (!response)
-                {
-                    return BadRequest("Operation Failed");
-                }
-                return Ok("data was deleted");
+                return BadRequest(new XmlException("Errors in the XML document").ToString());
             }
-            catch (Exception exception)
+            XMLValidator validator = new XMLValidator(xml);
+
+            if (!validator.ValidateXML())
             {
-                return InternalServerError(exception);
+                return BadRequest(validator.ValidationMessage);
+            }
+
+            string res_type = validator.resType;
+
+            switch (res_type)
+            {
+                case "Data":
+                    Data data = (Data)xmlconvertToModel(res_type, xml);
+                    try
+                    {
+                        emptyOrNull(data);
+                        DataController controller = new DataController();
+                        bool response = controller.Delete(data.Id);
+                        if (!response)
+                        {
+                            return BadRequest("Operation Failed");
+                        }
+                        return Ok("data was deleted");
+                    }
+                    catch (Exception exception)
+                    {
+                        return InternalServerError(exception);
+                    }
+
+                case "Subscription":
+                    Subscription sub = (Subscription)xmlconvertToModel(res_type, xml);
+                    try
+                    {
+                        emptyOrNull(sub);
+                        SubscriptionController controller = new SubscriptionController();
+                        bool response = controller.Delete(sub.Id);
+                        if (!response)
+                        {
+                            return BadRequest("Operation Failed");
+                        }
+                        return Ok("subscription was deleted");
+                    }
+                    catch (Exception exception)
+                    {
+                        return InternalServerError(exception);
+                    }
+                default:
+                    return BadRequest("Operation Failed");
             }
 
         }
@@ -437,7 +561,7 @@ namespace projectIS.Controller
         #endregion
         */
         #endregion
-        
+
         #endregion
 
     }

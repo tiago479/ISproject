@@ -12,7 +12,7 @@ namespace projectIS.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Application : RequestType
+    public partial class Application : ResourceType
     {
         public string Name { get; set; }
 

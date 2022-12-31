@@ -1,39 +1,87 @@
-﻿using System;
+﻿using projectIS.Model;
+using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
 
 namespace projectIS.Controller
 {
     public class SubscriptionController : ApiController
     {
-        // GET api/<controller>
-        public IEnumerable<string> Get()
+        private SqlConnection conn = null;
+        private List<Subscription> subs = null;
+        private Subscription sub = null;
+
+        private static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["projectIS.Properties.Settings.ConnDB"].ConnectionString;
+        public SubscriptionController()
         {
-            return new string[] { "value1", "value2" };
+            this.subs = new List<Subscription>();
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        #region Post
+        public bool Create(Subscription sub, string name)
         {
-            return "value";
-        }
+            bool validation = false;
+            try
+            {
+                conn = new SqlConnection(connectionString);
+                conn.Open();
 
-        // POST api/<controller>
-        public void Post([FromBody] string value)
-        {
+                string str = "INSERT INTO Subscription (Name, Creation_dt, Event, EndPoint, Parent) values(@Name, @Event, @EndPoint, @Creation_dt, " +
+                    "(Select Id From Module where Name = @appName))";
+                SqlCommand command = new SqlCommand(str, conn);
+                command.Parameters.AddWithValue("@Name", sub.Name);
+                command.Parameters.AddWithValue("@Event", sub.Event);
+                command.Parameters.AddWithValue("@EndPoint", sub.EndPoint);
+                command.Parameters.AddWithValue("@Creation_dt", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                command.Parameters.AddWithValue("@appName", name);
+                int rows = command.ExecuteNonQuery();
+                validation = rows > 0;
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            return validation;
         }
+        #endregion
 
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody] string value)
+        #region Delete
+        public bool Delete(int id)
         {
-        }
+            bool validation = false;
+            try
+            {
+                conn = new SqlConnection(connectionString);
+                conn.Open();
 
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
+                string str = "DELETE FROM Subscription WHERE Id = @Id";
+                SqlCommand command = new SqlCommand(str, conn);
+                command.Parameters.AddWithValue("@Id", id);
+                int rows = command.ExecuteNonQuery();
+                validation = rows > 0;
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            return validation;
         }
+        #endregion
     }
 }

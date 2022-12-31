@@ -20,6 +20,96 @@ namespace projectIS.Controller
         {
             this.datas = new List<Data>();
         }
+        
+        #region Post
+        public bool Create(Data data, string name)
+        {
+            bool validation = false;
+            try
+            {
+                conn = new SqlConnection(connectionString);
+                conn.Open();
+                string str = "INSERT INTO Datas (Content, Creation_dt, Parent) values(@Content, @Creation_dt, " +
+                    "(Select Id From Module where Name = @appName))";
+                SqlCommand command = new SqlCommand(str, conn);
+                command.Parameters.AddWithValue("@Content", data.Content);
+                command.Parameters.AddWithValue("@Creation_dt", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                command.Parameters.AddWithValue("@appName", name);
+                int rows = command.ExecuteNonQuery();
+                validation = rows > 0;
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            return validation;
+        }
+        #endregion
+
+        #region Delete
+        public bool Delete(int id)
+        {
+            bool validation = false;
+            try
+            {
+                conn = new SqlConnection(connectionString);
+                conn.Open();
+
+                string str = "DELETE FROM Datas WHERE Id = @Id";
+                SqlCommand command = new SqlCommand(str, conn);
+                command.Parameters.AddWithValue("@Id", id);
+                int rows = command.ExecuteNonQuery();
+                validation = rows > 0;
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            return validation;
+        }
+        #endregion
+
+        #region Extra Defesa
+        /*
+
+        #region Put
+        public bool Update(Data data)
+        {
+            bool validation = false;
+            try
+            {
+                conn = new SqlConnection(connectionString);
+                conn.Open();
+
+                string str = "UPDATE Datas set Content = @Content WHERE Content = @OldContent";
+                SqlCommand command = new SqlCommand(str, conn);
+                command.Parameters.AddWithValue("@Content", data.Content);
+                command.Parameters.AddWithValue("@OldContent", data.OldContent);
+                int rows = command.ExecuteNonQuery();
+                validation = rows > 0;
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            return validation;
+        }
+        #endregion
 
         #region Get All
         public List<Data> GetDatas(string name)
@@ -99,93 +189,7 @@ namespace projectIS.Controller
             return data;
         }
         #endregion
-        
-        #region Post
-        public bool Create(Data data, string name)
-        {
-            bool validation = false;
-            try
-            {
-                conn = new SqlConnection(connectionString);
-                conn.Open();
-                string str = "INSERT INTO Datas (Content, Creation_dt, Parent) values(@Content, @Creation_dt, " +
-                    "(Select Id From Module where Name = @appName))";
-                SqlCommand command = new SqlCommand(str, conn);
-                command.Parameters.AddWithValue("@Content", data.Content);
-                command.Parameters.AddWithValue("@Creation_dt", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                command.Parameters.AddWithValue("@appName", name);
-                int rows = command.ExecuteNonQuery();
-                validation = rows > 0;
-                conn.Close();
-            }
-            catch (Exception ex)
-            {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    conn.Close();
-                    Console.WriteLine(ex.Message);
-                }
-            }
-            return validation;
-        }
+        */
         #endregion
-
-        #region Put
-        public bool Update(Data data)
-        {
-            bool validation = false;
-            try
-            {
-                conn = new SqlConnection(connectionString);
-                conn.Open();
-
-                string str = "UPDATE Datas set Content = @Content WHERE Content = @OldContent";
-                SqlCommand command = new SqlCommand(str, conn);
-                command.Parameters.AddWithValue("@Content", data.Content);
-                command.Parameters.AddWithValue("@OldContent", data.OldContent);
-                int rows = command.ExecuteNonQuery();
-                validation = rows > 0;
-                conn.Close();
-            }
-            catch (Exception ex)
-            {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    conn.Close();
-                    Console.WriteLine(ex.Message);
-                }
-            }
-            return validation;
-        }
-        #endregion
-
-        #region Delete
-        public bool Delete(int id)
-        {
-            bool validation = false;
-            try
-            {
-                conn = new SqlConnection(connectionString);
-                conn.Open();
-
-                string str = "DELETE FROM Datas WHERE Id = @Id";
-                SqlCommand command = new SqlCommand(str, conn);
-                command.Parameters.AddWithValue("@Id", id);
-                int rows = command.ExecuteNonQuery();
-                validation = rows > 0;
-                conn.Close();
-            }
-            catch (Exception ex)
-            {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    conn.Close();
-                    Console.WriteLine(ex.Message);
-                }
-            }
-            return validation;
-        }
-        #endregion
-        
     }
 }

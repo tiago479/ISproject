@@ -4,6 +4,7 @@
 	<xs:complexType name="baseType" abstract="true">
 		<xs:sequence>
 			<xs:element name="Name" type="xs:string"/>
+			<xs:element name="OldName" minOccurs="0" type="xs:string"/>
 		</xs:sequence>
 	</xs:complexType>
 
@@ -17,7 +18,7 @@
 		<xs:complexContent>
 			<xs:extension base="baseType">
 				<xs:sequence>
-					<xs:element name="Parent" type="xs:integer"/>
+					<xs:element name="Parent" minOccurs="0" type="xs:integer"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -25,16 +26,19 @@
 
 	<xs:complexType name="dataType">
 		<xs:sequence>
-			<xs:element name="Content" type="xs:string" />
-			<xs:element name="Parent" type="xs:string" />
+			<xs:element name="Id" minOccurs="0" type="xs:integer"/>
+			<xs:element name="Content" minOccurs="0" type="xs:string" />
+			<xs:element name="Parent" minOccurs="0" type="xs:string" />
 		</xs:sequence>
 	</xs:complexType>
 
 	<xs:complexType name="subscriptionType">
 		<xs:sequence>
-			<xs:element name="Name" type="xs:string" />
-			<xs:element name="Event" type="xs:string" />
-			<xs:element name="Endpoint" type="xs:string" />
+			<xs:element name="Id" minOccurs="0" type="xs:integer"/>
+			<xs:element name="Name" minOccurs="0"  type="xs:string" />
+			<xs:element name="Event" minOccurs="0"  type="xs:string" />
+			<xs:element name="EndPoint" minOccurs="0"  type="xs:string" />
+			<xs:element name="Parent" minOccurs="0" type="xs:integer"/>
 		</xs:sequence>
 	</xs:complexType>
 
