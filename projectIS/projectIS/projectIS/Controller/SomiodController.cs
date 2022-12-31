@@ -131,7 +131,7 @@ namespace projectIS.Controller
             Application model = (Application)xmlconvertToModel("application", app);
             modelNull(model);
             modelNotValid(model, "application");
-
+            
             try
             {
                 ApplicationController application = new ApplicationController();
@@ -309,41 +309,7 @@ namespace projectIS.Controller
 
         #endregion
 
-        #region Data CRUD
-
-        #region Get all data 
-        [HttpGet, Route("{appName}/{modName}")]
-        public IHttpActionResult GetData(string modName)
-        {
-            try
-            {
-                DataController data = new DataController();
-                List<Data> response = data.GetDatas(modName);
-                return Ok(response);
-            }
-            catch (Exception exception)
-            {
-                return InternalServerError(exception);
-            }
-        }
-        #endregion
-        
-        #region Get an data by id
-        [HttpGet, Route("{appName}/{modName}/{id:int}")]
-        public IHttpActionResult GetdataById(int id)
-        {
-            try
-            {
-                DataController data = new DataController();
-                Data response = data.GetData(id);
-                return Ok(response);
-            }
-            catch (Exception exception)
-            {
-                return InternalServerError(exception);
-            }
-        }
-        #endregion
+        #region Data/Subscrition CRUD
 
         #region Post a new Data
         [HttpPost, Route("{appName}/{modName}")]
@@ -352,7 +318,7 @@ namespace projectIS.Controller
             Data model = (Data)xmlconvertToModel("data", form);
             modelNull(model);
             modelNotValid(model, "data");
-
+            
             try
             {
                 DataController data = new DataController();
@@ -362,31 +328,6 @@ namespace projectIS.Controller
                     return BadRequest("Operation Failed");
                 }
                 return Ok("A new application was created");
-            }
-            catch (Exception exception)
-            {
-                return InternalServerError(exception);
-            }
-        }
-        #endregion
-
-        #region Put update an data
-        [HttpPut, Route("{appName}/{modName}")]
-        public IHttpActionResult PutData([FromBody] XElement form)
-        {
-            Data model = (Data)xmlconvertToModel("data", form);
-            modelNull(model);
-            modelNotValid(model, "data");
-
-            try
-            {
-                DataController data = new DataController();
-                bool response = data.Update(model);
-                if (!response)
-                {
-                    return BadRequest("Operation Failed");
-                }
-                return Ok("Application was updated successfully!");
             }
             catch (Exception exception)
             {
@@ -419,9 +360,69 @@ namespace projectIS.Controller
 
         }
         #endregion
+
+        #region Extra para defesa
+        /*
+        #region Get all data 
+        [HttpGet, Route("{appName}/{modName}")]
+        public IHttpActionResult GetData(string modName)
+        {
+            try
+            {
+                DataController data = new DataController();
+                List<Data> response = data.GetDatas(modName);
+                return Ok(response);
+            }
+            catch (Exception exception)
+            {
+                return InternalServerError(exception);
+            }
+        }
+        #endregion
+        #region Get an data by id
+        [HttpGet, Route("{appName}/{modName}/{id:int}")]
+        public IHttpActionResult GetdataById(int id)
+        {
+            try
+            {
+                DataController data = new DataController();
+                Data response = data.GetData(id);
+                return Ok(response);
+            }
+            catch (Exception exception)
+            {
+                return InternalServerError(exception);
+            }
+        }
+        #endregion
+        #region Put update an data
+        [HttpPut, Route("{appName}/{modName}")]
+        public IHttpActionResult PutData([FromBody] XElement form)
+        {
+            Data model = (Data)xmlconvertToModel("data", form);
+            modelNull(model);
+            modelNotValid(model, "data");
+
+            try
+            {
+                DataController data = new DataController();
+                bool response = data.Update(model);
+                if (!response)
+                {
+                    return BadRequest("Operation Failed");
+                }
+                return Ok("Application was updated successfully!");
+            }
+            catch (Exception exception)
+            {
+                return InternalServerError(exception);
+            }
+        }
+        #endregion
+        */
+        #endregion
         
         #endregion
-
 
     }
 }
