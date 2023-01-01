@@ -230,16 +230,23 @@ namespace AppA
         {
             string appName = textBoxApplicationModule.Text;
 
-            XmlDocument moduleXml = new XmlDocument();
-            XmlElement moduleElement = (XmlElement)moduleXml.AppendChild(moduleXml.CreateElement("Module"));
-            moduleElement.AppendChild(moduleXml.CreateElement("Name")).InnerText = textBox1.Text;
-            moduleElement.AppendChild(moduleXml.CreateElement("Res_type")).InnerText = "module";
-            Console.WriteLine(moduleXml.OuterXml);
+            XmlDocument doc = new XmlDocument();
+            // Create the root element
+            XmlElement root = doc.CreateElement("Resource");
+            root.SetAttribute("type", "Module");
+            doc.AppendChild(root);
+            // Create the Application element
+            XmlElement module = doc.CreateElement("Module");
+            root.AppendChild(module);
+            // Create the Name element
+            XmlElement name = doc.CreateElement("Name");
+            name.InnerText = textBox1.Text;
+            module.AppendChild(name);
 
             var client = new RestSharp.RestClient(url);
             var request = new RestSharp.RestRequest($"{appName}", RestSharp.Method.Post);
             request.RequestFormat = RestSharp.DataFormat.Xml;
-            request.AddParameter("module/xml", moduleXml, ParameterType.RequestBody);
+            request.AddParameter("application/xml", doc, ParameterType.RequestBody);
             RestSharp.RestResponse response = client.Execute(request);
 
             MessageBox.Show(response.ResponseStatus.ToString());
@@ -257,11 +264,9 @@ namespace AppA
             var client = new RestClient(url);
 
             var request = new RestRequest($"{appName}/{id}", RestSharp.Method.Get);
-            request.AddHeader("Accept", "module/xml");
+            request.AddHeader("Accept", "application/xml");
 
             var response = client.Execute(request);
-
-
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
@@ -295,7 +300,7 @@ namespace AppA
             string appName = textBoxApplicationModule.Text;
 
             var request = new RestRequest($"{appName}", RestSharp.Method.Get);
-            request.AddHeader("Accept", "module/xml");
+            request.AddHeader("Accept", "application/xml");
 
             var response = client.Execute(request);
 
@@ -322,7 +327,66 @@ namespace AppA
             }
         }
 
-        #endregion
+        //Delete Module
 
+        private void DeleteModule_Click(object sender, EventArgs e)
+        {
+            string appName = textBoxApplicationModule.Text;
+
+            XmlDocument doc = new XmlDocument();
+            // Create the root element
+            XmlElement root = doc.CreateElement("Resource");
+            root.SetAttribute("type", "Module");
+            doc.AppendChild(root);
+            // Create the Application element
+            XmlElement module = doc.CreateElement("Module");
+            root.AppendChild(module);
+            // Create the Name element
+            XmlElement name = doc.CreateElement("Name");
+            name.InnerText = moduleName.Text;
+            module.AppendChild(name);
+
+            var client = new RestSharp.RestClient(url);
+            var request = new RestSharp.RestRequest($"{appName}", RestSharp.Method.Delete);
+            request.RequestFormat = RestSharp.DataFormat.Xml;
+            request.AddParameter("application/xml", doc, ParameterType.RequestBody);
+            RestSharp.RestResponse response = client.Execute(request);
+
+            MessageBox.Show(response.ResponseStatus.ToString());
+        }
+
+        //set MODULE
+
+        private void setModule_Click(object sender, EventArgs e)
+        {
+            string appName = textBoxApplicationModule.Text;
+
+            XmlDocument doc = new XmlDocument();
+            // Create the root element
+            XmlElement root = doc.CreateElement("Resource");
+            root.SetAttribute("type", "Module");
+            doc.AppendChild(root);
+            // Create the Application element
+            XmlElement module = doc.CreateElement("Module");
+            root.AppendChild(module);
+            // Create the Name element
+            XmlElement name = doc.CreateElement("Name");
+            name.InnerText = moduleName.Text;
+            module.AppendChild(name);
+            //Create the oldName Element
+            XmlElement oldName = doc.CreateElement("OldName");
+            oldName.InnerText = resType.Text;
+            module.AppendChild(oldName);
+
+            var client = new RestSharp.RestClient(url);
+            var request = new RestSharp.RestRequest($"{appName}", RestSharp.Method.Put);
+            request.RequestFormat = RestSharp.DataFormat.Xml;
+            request.AddParameter("application/xml", doc, ParameterType.RequestBody);
+            RestSharp.RestResponse response = client.Execute(request);
+
+            MessageBox.Show(response.ResponseStatus.ToString());
+        }
+
+        #endregion
     }
 }

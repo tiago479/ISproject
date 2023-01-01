@@ -1,8 +1,0 @@
-CREATE TABLE [dbo].[Application]
-(
-	[Id] INT NOT NULL,
-    [Name] NVARCHAR(50) NOT NULL, 
-    [Created_at] DATE NOT NULL,
-	PRIMARY KEY CLUSTERED ([Id] ASC), 
-)
-

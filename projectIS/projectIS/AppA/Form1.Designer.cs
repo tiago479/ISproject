@@ -43,7 +43,7 @@
             this.getAllMods = new System.Windows.Forms.TextBox();
             this.moduleId = new System.Windows.Forms.TextBox();
             this.moduleName = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.moduleOldName = new System.Windows.Forms.Label();
             this.ModuleNames = new System.Windows.Forms.Label();
             this.resType = new System.Windows.Forms.TextBox();
             this.applicationModule = new System.Windows.Forms.Label();
@@ -54,6 +54,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
             this.deleteApp = new System.Windows.Forms.TextBox();
+            this.setModule = new System.Windows.Forms.Button();
+            this.DeleteModule = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // applicationName
@@ -177,24 +179,24 @@
             // 
             // moduleName
             // 
-            this.moduleName.Location = new System.Drawing.Point(373, 205);
+            this.moduleName.Location = new System.Drawing.Point(648, 304);
             this.moduleName.Name = "moduleName";
             this.moduleName.Size = new System.Drawing.Size(100, 22);
             this.moduleName.TabIndex = 15;
             // 
-            // label1
+            // moduleOldName
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(309, 239);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 16);
-            this.label1.TabIndex = 16;
-            this.label1.Text = "resType";
+            this.moduleOldName.AutoSize = true;
+            this.moduleOldName.Location = new System.Drawing.Point(535, 334);
+            this.moduleOldName.Name = "moduleOldName";
+            this.moduleOldName.Size = new System.Drawing.Size(110, 16);
+            this.moduleOldName.TabIndex = 16;
+            this.moduleOldName.Text = "moduleOldName";
             // 
             // ModuleNames
             // 
             this.ModuleNames.AutoSize = true;
-            this.ModuleNames.Location = new System.Drawing.Point(271, 208);
+            this.ModuleNames.Location = new System.Drawing.Point(535, 310);
             this.ModuleNames.Name = "ModuleNames";
             this.ModuleNames.Size = new System.Drawing.Size(96, 16);
             this.ModuleNames.TabIndex = 17;
@@ -202,7 +204,7 @@
             // 
             // resType
             // 
-            this.resType.Location = new System.Drawing.Point(373, 233);
+            this.resType.Location = new System.Drawing.Point(647, 332);
             this.resType.Name = "resType";
             this.resType.Size = new System.Drawing.Size(101, 22);
             this.resType.TabIndex = 18;
@@ -273,11 +275,33 @@
             this.deleteApp.Size = new System.Drawing.Size(85, 22);
             this.deleteApp.TabIndex = 26;
             // 
+            // setModule
+            // 
+            this.setModule.Location = new System.Drawing.Point(665, 360);
+            this.setModule.Name = "setModule";
+            this.setModule.Size = new System.Drawing.Size(123, 34);
+            this.setModule.TabIndex = 27;
+            this.setModule.Text = "setModule";
+            this.setModule.UseVisualStyleBackColor = true;
+            this.setModule.Click += new System.EventHandler(this.setModule_Click);
+            // 
+            // DeleteModule
+            // 
+            this.DeleteModule.Location = new System.Drawing.Point(538, 360);
+            this.DeleteModule.Name = "DeleteModule";
+            this.DeleteModule.Size = new System.Drawing.Size(121, 35);
+            this.DeleteModule.TabIndex = 28;
+            this.DeleteModule.Text = "DeleteModule";
+            this.DeleteModule.UseVisualStyleBackColor = true;
+            this.DeleteModule.Click += new System.EventHandler(this.DeleteModule_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.DeleteModule);
+            this.Controls.Add(this.setModule);
             this.Controls.Add(this.deleteApp);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.label2);
@@ -288,7 +312,7 @@
             this.Controls.Add(this.applicationModule);
             this.Controls.Add(this.resType);
             this.Controls.Add(this.ModuleNames);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.moduleOldName);
             this.Controls.Add(this.moduleName);
             this.Controls.Add(this.moduleId);
             this.Controls.Add(this.getAllMods);
@@ -327,7 +351,7 @@
         private System.Windows.Forms.TextBox getAllMods;
         private System.Windows.Forms.TextBox moduleId;
         private System.Windows.Forms.TextBox moduleName;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label moduleOldName;
         private System.Windows.Forms.Label ModuleNames;
         private System.Windows.Forms.TextBox resType;
         private System.Windows.Forms.Label applicationModule;
@@ -338,6 +362,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.TextBox deleteApp;
+        private System.Windows.Forms.Button setModule;
+        private System.Windows.Forms.Button DeleteModule;
     }
 }
 
