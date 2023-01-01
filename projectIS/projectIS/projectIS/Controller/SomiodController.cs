@@ -407,6 +407,12 @@ namespace projectIS.Controller
                         {
                             return BadRequest("Operation Failed");
                         }
+                        //criar metodo notifyChannel para ir buscar endPoint  
+                        /*
+                          MqttClient mClient = new MqttClient(IPAddress.Parse(endpoint));
+                           string[] mStrTopicsInfo = { "news", "complaints" };
+                         */ 
+                        //enviar notificacao para o canal (mosquitto)
                         return Ok("A new data was created");
                     }
                     catch (Exception exception)
@@ -560,9 +566,9 @@ namespace projectIS.Controller
         }
         #endregion
         */
-        #endregion
+                        #endregion
 
-        #endregion
+                        #endregion
 
-    }
+                    }
 }

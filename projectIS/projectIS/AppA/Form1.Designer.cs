@@ -48,6 +48,12 @@
             this.resType = new System.Windows.Forms.TextBox();
             this.applicationModule = new System.Windows.Forms.Label();
             this.textBoxApplicationModule = new System.Windows.Forms.TextBox();
+            this.setApp = new System.Windows.Forms.Button();
+            this.setAppName = new System.Windows.Forms.TextBox();
+            this.Name = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
+            this.deleteApp = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // applicationName
@@ -217,11 +223,67 @@
             this.textBoxApplicationModule.Size = new System.Drawing.Size(112, 22);
             this.textBoxApplicationModule.TabIndex = 20;
             // 
+            // setApp
+            // 
+            this.setApp.Location = new System.Drawing.Point(398, 68);
+            this.setApp.Name = "setApp";
+            this.setApp.Size = new System.Drawing.Size(75, 23);
+            this.setApp.TabIndex = 21;
+            this.setApp.Text = "setApp";
+            this.setApp.UseVisualStyleBackColor = true;
+            this.setApp.Click += new System.EventHandler(this.setApp_Click);
+            // 
+            // setAppName
+            // 
+            this.setAppName.Location = new System.Drawing.Point(387, 12);
+            this.setAppName.Name = "setAppName";
+            this.setAppName.Size = new System.Drawing.Size(108, 22);
+            this.setAppName.TabIndex = 22;
+            // 
+            // Name
+            // 
+            this.Name.Location = new System.Drawing.Point(387, 40);
+            this.Name.Name = "Name";
+            this.Name.Size = new System.Drawing.Size(96, 22);
+            this.Name.TabIndex = 23;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(309, 12);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(64, 16);
+            this.label2.TabIndex = 24;
+            this.label2.Text = "oldNAme";
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(393, 149);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(90, 21);
+            this.button4.TabIndex = 25;
+            this.button4.Text = "Delete";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click_1);
+            // 
+            // deleteApp
+            // 
+            this.deleteApp.Location = new System.Drawing.Point(393, 125);
+            this.deleteApp.Name = "deleteApp";
+            this.deleteApp.Size = new System.Drawing.Size(85, 22);
+            this.deleteApp.TabIndex = 26;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.deleteApp);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.Name);
+            this.Controls.Add(this.setAppName);
+            this.Controls.Add(this.setApp);
             this.Controls.Add(this.textBoxApplicationModule);
             this.Controls.Add(this.applicationModule);
             this.Controls.Add(this.resType);
@@ -242,7 +304,6 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.createButton);
             this.Controls.Add(this.applicationName);
-            this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -271,6 +332,12 @@
         private System.Windows.Forms.TextBox resType;
         private System.Windows.Forms.Label applicationModule;
         private System.Windows.Forms.TextBox textBoxApplicationModule;
+        private System.Windows.Forms.Button setApp;
+        private System.Windows.Forms.TextBox setAppName;
+        private System.Windows.Forms.TextBox Name;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.TextBox deleteApp;
     }
 }
 

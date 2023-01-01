@@ -24,6 +24,7 @@ using System.Xml.Serialization;
 using RestSharp.Serializers.Xml;
 using RestSharp.Serializers;
 using System.Data.SqlTypes;
+using System.Diagnostics;
 
 namespace AppA
 {
@@ -68,15 +69,23 @@ namespace AppA
         //CREATE APPLICATION
         private void createButton_Click(object sender, EventArgs e)
         {
-            XmlDocument applicationXml = new XmlDocument();
-            XmlElement applicationElement = (XmlElement)applicationXml.AppendChild(applicationXml.CreateElement("Application"));
-            applicationElement.AppendChild(applicationXml.CreateElement("Name")).InnerText = applicationName.Text;
-            Console.WriteLine(applicationXml.OuterXml);
+             XmlDocument doc = new XmlDocument();
+            // Create the root element
+            XmlElement root = doc.CreateElement("Resource");
+            root.SetAttribute("type", "Application");
+            doc.AppendChild(root);
+            // Create the Application element
+            XmlElement application = doc.CreateElement("Application");
+            root.AppendChild(application);
+            // Create the Name element
+            XmlElement name = doc.CreateElement("Name");
+            name.InnerText = applicationName.Text;
+            application.AppendChild(name);
 
             var client = new RestSharp.RestClient(url);
             var request = new RestSharp.RestRequest("", RestSharp.Method.Post);
             request.RequestFormat = RestSharp.DataFormat.Xml;
-            request.AddParameter("application/xml", applicationXml, ParameterType.RequestBody);
+            request.AddParameter("application/xml", doc, ParameterType.RequestBody);
             RestSharp.RestResponse response = client.Execute(request);
 
             MessageBox.Show(response.ResponseStatus.ToString());
@@ -158,6 +167,60 @@ namespace AppA
                 }
             }
         }
+        //Set App Name
+        private void setApp_Click(object sender, EventArgs e)
+        {
+            XmlDocument doc = new XmlDocument();
+            // Create the root element
+            XmlElement root = doc.CreateElement("Resource");
+            root.SetAttribute("type", "Application");
+            doc.AppendChild(root);
+            // Create the Application element
+            XmlElement application = doc.CreateElement("Application");
+            root.AppendChild(application);
+            // Create the Name element
+            XmlElement name = doc.CreateElement("Name");
+            name.InnerText = Name.Text;
+            application.AppendChild(name);
+            //Create the oldName Element
+            XmlElement oldName = doc.CreateElement("OldName");
+            oldName.InnerText = setAppName.Text;
+            application.AppendChild(oldName);
+
+            var client = new RestSharp.RestClient(url);
+            var request = new RestSharp.RestRequest("", RestSharp.Method.Put);
+            request.RequestFormat = RestSharp.DataFormat.Xml;
+            request.AddParameter("application/xml", doc, ParameterType.RequestBody);
+            RestSharp.RestResponse response = client.Execute(request);
+
+            MessageBox.Show(response.ResponseStatus.ToString());
+        }
+
+        //Delete Application
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            XmlDocument doc = new XmlDocument();
+            // Create the root element
+            XmlElement root = doc.CreateElement("Resource");
+            root.SetAttribute("type", "Application");
+            doc.AppendChild(root);
+            // Create the Application element
+            XmlElement application = doc.CreateElement("Application");
+            root.AppendChild(application);
+            // Create the Name element
+            XmlElement name = doc.CreateElement("Name");
+            name.InnerText = deleteApp.Text;
+            application.AppendChild(name);
+
+            var client = new RestSharp.RestClient(url);
+            var request = new RestSharp.RestRequest("", RestSharp.Method.Delete);
+            request.RequestFormat = RestSharp.DataFormat.Xml;
+            request.AddParameter("application/xml", doc, ParameterType.RequestBody);
+            RestSharp.RestResponse response = client.Execute(request);
+
+            MessageBox.Show(response.ResponseStatus.ToString());
+        }
+
         #endregion
 
         #region MODULE
@@ -260,5 +323,6 @@ namespace AppA
         }
 
         #endregion
+
     }
 }
