@@ -389,7 +389,6 @@
             this.Controls.Add(this.createButton);
             this.Controls.Add(this.applicationName);
             this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
             this.PerformLayout();

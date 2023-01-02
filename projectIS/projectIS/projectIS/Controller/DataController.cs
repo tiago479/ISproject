@@ -20,7 +20,48 @@ namespace projectIS.Controller
         {
             this.datas = new List<Data>();
         }
-        
+
+        #region Get All
+        public List<Data> GetDatas(string name)
+        {
+
+            try
+            {
+                conn = new SqlConnection(connectionString);
+                conn.Open();
+
+                SqlCommand command = new SqlCommand("SELECT * FROM Datas WHERE Parent in " +
+                    "(SELECT Id FROM Module WHERE Name = @appName)", conn);
+                command.Parameters.AddWithValue("@appName", name);
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    data = new Data
+                    {
+                        Content = (string)reader["Content"],
+                        Id = (int)reader["Id"],
+                        Creation_dt = (string)reader["Creation_dt"],
+                        Parent = (int)reader["Parent"]
+                    };
+                    datas.Add(data);
+
+                }
+                reader.Close();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+                throw ex;
+            }
+
+            return datas;
+        }
+        #endregion
+
         #region Post
         public bool Create(Data data, string name)
         {

@@ -443,7 +443,7 @@ namespace AppA
         MessageBox.Show(response.ResponseStatus.ToString());
         */
 
-        /* Create
+        /* Delete
         string appName = textBoxApplicationModule.Text;
         string modName = moduleName.Text;
 

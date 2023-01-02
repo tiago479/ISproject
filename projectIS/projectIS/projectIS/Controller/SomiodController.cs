@@ -375,6 +375,23 @@ namespace projectIS.Controller
         #endregion
 
         #region Data/Subscrition CRUD
+        #region Get all data 
+        [HttpGet, Route("{appName}/{modName}")]
+        public IHttpActionResult GetData(string modName)
+        {
+            try
+            {
+                DataController data = new DataController();
+                List<Data> datas = data.GetDatas(modName);
+                string response = ToXML(datas);
+                return Ok(response);
+            }
+            catch (Exception exception)
+            {
+                return InternalServerError(exception);
+            }
+        }
+        #endregion
 
         #region Post a new Data
         [HttpPost, Route("{appName}/{modName}")]
