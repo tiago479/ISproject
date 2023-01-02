@@ -69,7 +69,7 @@ namespace AppA
         //CREATE APPLICATION
         private void createButton_Click(object sender, EventArgs e)
         {
-             XmlDocument doc = new XmlDocument();
+            XmlDocument doc = new XmlDocument();
             // Create the root element
             XmlElement root = doc.CreateElement("Resource");
             root.SetAttribute("type", "Application");
@@ -100,7 +100,7 @@ namespace AppA
                 return;
 
             var client = new RestClient(url);
-            
+
             var request = new RestRequest($"{id}", RestSharp.Method.Get);
             request.AddHeader("Accept", "application/xml");
 
@@ -110,7 +110,7 @@ namespace AppA
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                
+
                 var result = XElement.Parse(response.Content).Value; //se nao fizer isto aparece o microsoft shit
 
                 string xmlWellFormated = RemoveAllNamespaces(result);
@@ -157,14 +157,14 @@ namespace AppA
                 List<Application> Applications = (List<Application>)serializer.Deserialize(reader);
 
                 foreach (Application app in Applications)
-                if (app.Id == 0)
-                {
-                    getAllAppsBox.AppendText($"Application not found {Environment.NewLine}");
-                }
-                else
-                {
-                    getAllAppsBox.AppendText($"created at: {app.Id} {Environment.NewLine} Application Name: {app.Name} {Environment.NewLine} created at: {app.Creation_dt}");
-                }
+                    if (app.Id == 0)
+                    {
+                        getAllAppsBox.AppendText($"Application not found {Environment.NewLine}");
+                    }
+                    else
+                    {
+                        getAllAppsBox.AppendText($"created at: {app.Id} {Environment.NewLine} Application Name: {app.Name} {Environment.NewLine} created at: {app.Creation_dt}");
+                    }
             }
         }
         //Set App Name
@@ -296,7 +296,7 @@ namespace AppA
         //GET ALL MODULES
         private void button4_Click(object sender, EventArgs e)
         {
-            var client = new RestClient(url); 
+            var client = new RestClient(url);
             string appName = textBoxApplicationModule.Text;
 
             var request = new RestRequest($"{appName}", RestSharp.Method.Get);
@@ -386,6 +386,155 @@ namespace AppA
 
             MessageBox.Show(response.ResponseStatus.ToString());
         }
+
+        #endregion
+
+        private void createData_Click(object sender, EventArgs e)
+        {
+            string appName = textBoxApplicationModule.Text;
+            string modName = moduleName.Text;
+
+            XmlDocument doc = new XmlDocument();
+            // Create the root element
+            XmlElement root = doc.CreateElement("Resource");
+            root.SetAttribute("type", "Data");
+            doc.AppendChild(root);
+            // Create the Application element
+            XmlElement data = doc.CreateElement("Data");
+            root.AppendChild(data);
+            // Create the Name element
+            XmlElement name = doc.CreateElement("Content");
+            name.InnerText = textBox2.Text;
+            data.AppendChild(name);
+
+            var client = new RestSharp.RestClient(url);
+            var request = new RestSharp.RestRequest($"{appName}/{modName}", RestSharp.Method.Post);
+            request.RequestFormat = RestSharp.DataFormat.Xml;
+            request.AddParameter("application/xml", doc, ParameterType.RequestBody);
+            RestSharp.RestResponse response = client.Execute(request);
+
+            MessageBox.Show(response.ResponseStatus.ToString());
+        }
+
+        #region Data Without references
+        /* Create
+        string appName = textBoxApplicationModule.Text;
+        string modName = moduleName.Text;
+
+        XmlDocument doc = new XmlDocument();
+        // Create the root element
+        XmlElement root = doc.CreateElement("Resource");
+        root.SetAttribute("type", "Data");
+            doc.AppendChild(root);
+            // Create the Application element
+            XmlElement data = doc.CreateElement("Data");
+        root.AppendChild(data);
+            // Create the Name element
+            XmlElement content = doc.CreateElement("Content");
+        content.InnerText = falta textbox;
+            data.AppendChild(content);
+
+            var client = new RestSharp.RestClient(url);
+        var request = new RestSharp.RestRequest($"{appName}/{modName}", RestSharp.Method.Post);
+        request.RequestFormat = RestSharp.DataFormat.Xml;
+            request.AddParameter("application/xml", doc, ParameterType.RequestBody);
+            RestSharp.RestResponse response = client.Execute(request);
+
+        MessageBox.Show(response.ResponseStatus.ToString());
+        */
+
+        /* Create
+        string appName = textBoxApplicationModule.Text;
+        string modName = moduleName.Text;
+
+        XmlDocument doc = new XmlDocument();
+        // Create the root element
+        XmlElement root = doc.CreateElement("Resource");
+        root.SetAttribute("type", "Data");
+            doc.AppendChild(root);
+            // Create the Application element
+            XmlElement data = doc.CreateElement("Data");
+        root.AppendChild(data);
+            // Create the ID element
+            XmlElement id = doc.CreateElement("Id");
+        id.InnerText = falta textbox;
+            data.AppendChild(id);
+
+            var client = new RestSharp.RestClient(url);
+        var request = new RestSharp.RestRequest($"{appName}/{modName}", RestSharp.Method.Delete);
+        request.RequestFormat = RestSharp.DataFormat.Xml;
+            request.AddParameter("application/xml", doc, ParameterType.RequestBody);
+            RestSharp.RestResponse response = client.Execute(request);
+
+        MessageBox.Show(response.ResponseStatus.ToString());
+        */
+
+        #endregion
+
+        #region Sub Without references
+        /* Create
+        string appName = textBoxApplicationModule.Text;
+        string modName = moduleName.Text;
+
+        XmlDocument doc = new XmlDocument();
+        // Create the root element
+        XmlElement root = doc.CreateElement("Resource");
+        root.SetAttribute("type", "Subscription");
+            doc.AppendChild(root);
+            // Create the Subscription element
+            XmlElement sub = doc.CreateElement("Subscription");
+        root.AppendChild(sub);
+            // Create the Name element
+            XmlElement name = doc.CreateElement("Name");
+        name.InnerText = falta textbox;
+            sub.AppendChild(name);
+            XmlElement event = doc.CreateElement("Event");
+        event.InnerText = falta textbox;
+            sub.AppendChild(event);
+            XmlElement endPoint = doc.CreateElement("EndPoint");
+        endPoint.InnerText = falta textbox;
+            sub.AppendChild(endPoint);
+
+            var client = new RestSharp.RestClient(url);
+        var request = new RestSharp.RestRequest($"{appName}/{modName}", RestSharp.Method.Post);
+        request.RequestFormat = RestSharp.DataFormat.Xml;
+            request.AddParameter("application/xml", doc, ParameterType.RequestBody);
+            RestSharp.RestResponse response = client.Execute(request);
+
+        MessageBox.Show(response.ResponseStatus.ToString());
+        */
+
+        /* Create
+        string appName = textBoxApplicationModule.Text;
+        string modName = moduleName.Text;
+
+        XmlDocument doc = new XmlDocument();
+        // Create the root element
+        XmlElement root = doc.CreateElement("Resource");
+        root.SetAttribute("type", "Subscription");
+            doc.AppendChild(root);
+            // Create the Subscription element
+            XmlElement sub = doc.CreateElement("Subscription");
+        root.AppendChild(sub);
+            // Create the Name element
+            XmlElement name = doc.CreateElement("Name");
+        name.InnerText = falta textbox;
+            sub.AppendChild(name);
+            XmlElement event = doc.CreateElement("Event");
+        event.InnerText = falta textbox;
+            sub.AppendChild(event);
+            XmlElement endPoint = doc.CreateElement("EndPoint");
+        endPoint.InnerText = falta textbox;
+            sub.AppendChild(endPoint);
+
+            var client = new RestSharp.RestClient(url);
+        var request = new RestSharp.RestRequest($"{appName}/{modName}", RestSharp.Method.Delete);
+        request.RequestFormat = RestSharp.DataFormat.Xml;
+            request.AddParameter("application/xml", doc, ParameterType.RequestBody);
+            RestSharp.RestResponse response = client.Execute(request);
+
+        MessageBox.Show(response.ResponseStatus.ToString());
+        */
 
         #endregion
     }
