@@ -33,13 +33,13 @@ namespace projectIS.Controller
                 conn.Open();
 
                 string str = "INSERT INTO Subscription (Name, Creation_dt, Event, EndPoint, Parent) values(@Name, @Event, @EndPoint, @Creation_dt, " +
-                    "(Select Id From Module where Name = @appName))";
+                    "(Select Id From Module where Name = @modeName))";
                 SqlCommand command = new SqlCommand(str, conn);
                 command.Parameters.AddWithValue("@Name", sub.Name);
                 command.Parameters.AddWithValue("@Event", sub.Event);
-                command.Parameters.AddWithValue("@EndPoint", sub.EndPoint);
+                command.Parameters.AddWithValue("@EndPoint", "127.0.0.1");
                 command.Parameters.AddWithValue("@Creation_dt", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                command.Parameters.AddWithValue("@appName", name);
+                command.Parameters.AddWithValue("@modeName", name);
                 int rows = command.ExecuteNonQuery();
                 validation = rows > 0;
                 conn.Close();

@@ -13,12 +13,14 @@ using System.Web.UI.WebControls;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using uPLibrary.Networking.M2Mqtt;
 
 namespace projectIS.Controller
 {
     [RoutePrefix("api/somiod")]
     public class SomiodController : ApiController
     {
+        string endPoint = "127.0.0.1";
         #region XML to model
         public ResourceType xmlconvertToModel(string request, XElement xml)
         {
@@ -425,10 +427,10 @@ namespace projectIS.Controller
                             return BadRequest("Operation Failed");
                         }
                         //criar metodo notifyChannel para ir buscar endPoint  
-                        /*
-                          MqttClient mClient = new MqttClient(IPAddress.Parse(endpoint));
-                           string[] mStrTopicsInfo = { "news", "complaints" };
-                         */ 
+                          
+                          MqttClient mClient = new MqttClient(IPAddress.Parse(endPoint));
+                           string[] mStrTopicsInfo = { "Creation" };
+                         
                         //enviar notificacao para o canal (mosquitto)
                         return Ok("A new data was created");
                     }

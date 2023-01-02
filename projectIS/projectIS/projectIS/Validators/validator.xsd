@@ -36,7 +36,14 @@
 		<xs:sequence>
 			<xs:element name="Id" minOccurs="0" type="xs:integer"/>
 			<xs:element name="Name" minOccurs="0"  type="xs:string" />
-			<xs:element name="Event" minOccurs="0"  type="xs:string" />
+			<xs:element name="Event" minOccurs="0">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="Creation"/>
+					<xs:enumeration value="Deletion"/>
+				</xs:restriction>
+			</xs:simpleType>
+			</xs:element>
 			<xs:element name="EndPoint" minOccurs="0"  type="xs:string" />
 			<xs:element name="Parent" minOccurs="0" type="xs:integer"/>
 		</xs:sequence>
