@@ -395,9 +395,9 @@ namespace projectIS.Controller
         }
         #endregion
 
-        #region Post a new Data
+        #region Post a new Data/Subscrition
         [HttpPost, Route("{appName}/{modName}")]
-        public IHttpActionResult PostData(string modName, [FromBody] XElement xml)
+        public IHttpActionResult PostData(string appName,string modName, [FromBody] XElement xml)
         {
             if (xml == null)
             {
@@ -426,11 +426,12 @@ namespace projectIS.Controller
                         {
                             return BadRequest("Operation Failed");
                         }
+
                         //criar metodo notifyChannel para ir buscar endPoint  
-                          
-                          MqttClient mClient = new MqttClient(IPAddress.Parse(endPoint));
-                           string[] mStrTopicsInfo = { "Creation" };
-                         
+
+                        MqttClient mClient = new MqttClient(IPAddress.Parse(endPoint));
+                        string[] mStrTopicsInfo = { "Creation" };
+
                         //enviar notificacao para o canal (mosquitto)
                         return Ok("A new data was created");
                     }
@@ -465,7 +466,7 @@ namespace projectIS.Controller
         }
         #endregion
 
-        #region Delete an Data
+        #region Delete an Data/Subscrition
         [HttpDelete, Route("{appName}/{modName}")]
         public IHttpActionResult DeleteData([FromBody] XElement xml)
         {
@@ -585,9 +586,9 @@ namespace projectIS.Controller
         }
         #endregion
         */
-                        #endregion
+        #endregion
 
-                        #endregion
+        #endregion
 
-                    }
+    }
 }

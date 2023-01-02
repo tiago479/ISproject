@@ -37,6 +37,7 @@ namespace projectIS.Controller
                 SqlCommand command = new SqlCommand(str, conn);
                 command.Parameters.AddWithValue("@Name", sub.Name);
                 command.Parameters.AddWithValue("@Event", sub.Event);
+                //command.Parameters.AddWithValue("@EndPoint", sub.EndPoint);
                 command.Parameters.AddWithValue("@EndPoint", "127.0.0.1");
                 command.Parameters.AddWithValue("@Creation_dt", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
                 command.Parameters.AddWithValue("@modeName", name);
