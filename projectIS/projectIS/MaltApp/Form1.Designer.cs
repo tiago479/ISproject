@@ -30,6 +30,7 @@
         {
             this.btnGetAllApp = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnClearAppSelection = new System.Windows.Forms.Button();
             this.btnDeleteApp = new System.Windows.Forms.Button();
             this.dataGridViewApp = new System.Windows.Forms.DataGridView();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,6 +53,7 @@
             this.textAppName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnClearModuleSelection = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.textBoxApplicationModule = new System.Windows.Forms.TextBox();
             this.btnDeleteModule = new System.Windows.Forms.Button();
@@ -74,11 +76,11 @@
             this.textNewModuleName = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.selectedModuleData = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.textSelectedModule = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.textDataContent = new System.Windows.Forms.TextBox();
             this.btnCreateData = new System.Windows.Forms.Button();
-            this.btnClearAppSelection = new System.Windows.Forms.Button();
-            this.btnClearModuleSelection = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewApp)).BeginInit();
             this.groupCreateNewApplication.SuspendLayout();
@@ -116,6 +118,17 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Application";
             // 
+            // btnClearAppSelection
+            // 
+            this.btnClearAppSelection.Enabled = false;
+            this.btnClearAppSelection.Location = new System.Drawing.Point(139, 220);
+            this.btnClearAppSelection.Name = "btnClearAppSelection";
+            this.btnClearAppSelection.Size = new System.Drawing.Size(96, 23);
+            this.btnClearAppSelection.TabIndex = 9;
+            this.btnClearAppSelection.Text = "Clear selection";
+            this.btnClearAppSelection.UseVisualStyleBackColor = true;
+            this.btnClearAppSelection.Click += new System.EventHandler(this.btnClearAppSelection_Click);
+            // 
             // btnDeleteApp
             // 
             this.btnDeleteApp.Enabled = false;
@@ -144,9 +157,10 @@
             this.dataGridViewApp.MultiSelect = false;
             this.dataGridViewApp.Name = "dataGridViewApp";
             this.dataGridViewApp.ReadOnly = true;
+            this.dataGridViewApp.RowHeadersVisible = false;
             this.dataGridViewApp.Size = new System.Drawing.Size(326, 143);
             this.dataGridViewApp.TabIndex = 7;
-            this.dataGridViewApp.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewApp_CellContentClick);
+            this.dataGridViewApp.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewApp_CellContentClick);
             this.dataGridViewApp.SelectionChanged += new System.EventHandler(this.dataGridViewApp_SelectionChanged);
             // 
             // id
@@ -336,6 +350,17 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Modules";
             // 
+            // btnClearModuleSelection
+            // 
+            this.btnClearModuleSelection.Enabled = false;
+            this.btnClearModuleSelection.Location = new System.Drawing.Point(177, 249);
+            this.btnClearModuleSelection.Name = "btnClearModuleSelection";
+            this.btnClearModuleSelection.Size = new System.Drawing.Size(96, 23);
+            this.btnClearModuleSelection.TabIndex = 10;
+            this.btnClearModuleSelection.Text = "Clear selection";
+            this.btnClearModuleSelection.UseVisualStyleBackColor = true;
+            this.btnClearModuleSelection.Click += new System.EventHandler(this.btnClearModuleSelection_Click);
+            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -379,7 +404,7 @@
             this.dataGridViewModules.RowHeadersVisible = false;
             this.dataGridViewModules.Size = new System.Drawing.Size(326, 143);
             this.dataGridViewModules.TabIndex = 7;
-            this.dataGridViewModules.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewModules_CellContentClick);
+            this.dataGridViewModules.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewModules_CellContentClick);
             this.dataGridViewModules.SelectionChanged += new System.EventHandler(this.dataGridViewModules_SelectionChanged);
             // 
             // label6
@@ -545,20 +570,40 @@
             // 
             // selectedModuleData
             // 
+            this.selectedModuleData.Controls.Add(this.label13);
+            this.selectedModuleData.Controls.Add(this.textSelectedModule);
             this.selectedModuleData.Controls.Add(this.label12);
             this.selectedModuleData.Controls.Add(this.textDataContent);
             this.selectedModuleData.Controls.Add(this.btnCreateData);
             this.selectedModuleData.Location = new System.Drawing.Point(726, 12);
             this.selectedModuleData.Name = "selectedModuleData";
-            this.selectedModuleData.Size = new System.Drawing.Size(338, 95);
+            this.selectedModuleData.Size = new System.Drawing.Size(338, 116);
             this.selectedModuleData.TabIndex = 9;
             this.selectedModuleData.TabStop = false;
             this.selectedModuleData.Text = "<Select Module>";
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(6, 27);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(42, 13);
+            this.label13.TabIndex = 12;
+            this.label13.Text = "Module";
+            // 
+            // textSelectedModule
+            // 
+            this.textSelectedModule.Enabled = false;
+            this.textSelectedModule.Location = new System.Drawing.Point(56, 24);
+            this.textSelectedModule.Name = "textSelectedModule";
+            this.textSelectedModule.ReadOnly = true;
+            this.textSelectedModule.Size = new System.Drawing.Size(276, 20);
+            this.textSelectedModule.TabIndex = 11;
+            // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(6, 22);
+            this.label12.Location = new System.Drawing.Point(6, 50);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(44, 13);
             this.label12.TabIndex = 10;
@@ -567,7 +612,7 @@
             // textDataContent
             // 
             this.textDataContent.Enabled = false;
-            this.textDataContent.Location = new System.Drawing.Point(56, 19);
+            this.textDataContent.Location = new System.Drawing.Point(56, 47);
             this.textDataContent.Name = "textDataContent";
             this.textDataContent.Size = new System.Drawing.Size(276, 20);
             this.textDataContent.TabIndex = 9;
@@ -575,35 +620,13 @@
             // btnCreateData
             // 
             this.btnCreateData.Enabled = false;
-            this.btnCreateData.Location = new System.Drawing.Point(6, 48);
+            this.btnCreateData.Location = new System.Drawing.Point(6, 76);
             this.btnCreateData.Name = "btnCreateData";
             this.btnCreateData.Size = new System.Drawing.Size(326, 28);
             this.btnCreateData.TabIndex = 0;
             this.btnCreateData.Text = "Create";
             this.btnCreateData.UseVisualStyleBackColor = true;
             this.btnCreateData.Click += new System.EventHandler(this.btnCreateData_Click);
-            // 
-            // btnClearAppSelection
-            // 
-            this.btnClearAppSelection.Enabled = false;
-            this.btnClearAppSelection.Location = new System.Drawing.Point(139, 220);
-            this.btnClearAppSelection.Name = "btnClearAppSelection";
-            this.btnClearAppSelection.Size = new System.Drawing.Size(96, 23);
-            this.btnClearAppSelection.TabIndex = 9;
-            this.btnClearAppSelection.Text = "Clear selection";
-            this.btnClearAppSelection.UseVisualStyleBackColor = true;
-            this.btnClearAppSelection.Click += new System.EventHandler(this.btnClearAppSelection_Click);
-            // 
-            // btnClearModuleSelection
-            // 
-            this.btnClearModuleSelection.Enabled = false;
-            this.btnClearModuleSelection.Location = new System.Drawing.Point(177, 249);
-            this.btnClearModuleSelection.Name = "btnClearModuleSelection";
-            this.btnClearModuleSelection.Size = new System.Drawing.Size(96, 23);
-            this.btnClearModuleSelection.TabIndex = 10;
-            this.btnClearModuleSelection.Text = "Clear selection";
-            this.btnClearModuleSelection.UseVisualStyleBackColor = true;
-            this.btnClearModuleSelection.Click += new System.EventHandler(this.btnClearModuleSelection_Click);
             // 
             // SOMIOD
             // 
@@ -698,6 +721,8 @@
         private System.Windows.Forms.Button btnCreateData;
         private System.Windows.Forms.Button btnClearAppSelection;
         private System.Windows.Forms.Button btnClearModuleSelection;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox textSelectedModule;
     }
 }
 

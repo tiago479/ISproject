@@ -67,6 +67,15 @@ namespace MaltApp
             return new XElement(xmlDocument.Name.LocalName, xmlDocument.Elements().Select(el => RemoveAllNamespaces(el))); //recursivo .... 0> (lambda expression(=>) method call para o parametro el ...)
         }
 
+        private bool isEmptyString(string input)
+        {
+            return input.Trim().Length <= 0;
+        }
+
+        public string RemoveSpecialChars(string input)
+        {
+            return Regex.Replace(input, @"[^0-9a-zA-Z-_]+", string.Empty);
+        }
         #endregion
 
 
@@ -131,10 +140,7 @@ namespace MaltApp
 
         }
 
-        public string RemoveSpecialChars(string input)
-        {
-            return Regex.Replace(input, @"[^0-9a-zA-Z-_]+", string.Empty);
-        }
+
 
         private async void btnCreateApp_Click(object sender, EventArgs e)
         {
@@ -142,7 +148,7 @@ namespace MaltApp
             string appName = RemoveSpecialChars(textNewAppName.Text);
 
 
-            if (appName.Trim().Length <= 0)
+            if (isEmptyString(appName))
             {
                 MessageBox.Show("Please enter the application name.");
                 return;
@@ -354,17 +360,13 @@ namespace MaltApp
             return confirmResult == DialogResult.Yes;
         }
 
-        private bool validateAppName(string appName)
-        {
-            return appName.Trim().Length <= 0;
-        }
 
         private async void btnCreateModule_Click(object sender, EventArgs e)
         {
 
             string appName = textBoxApplicationModule.Text;
 
-            if (validateAppName(appName))
+            if (isEmptyString(appName))
             {
                 MessageBox.Show("Please select/enter the application name.");
                 return;
@@ -426,7 +428,7 @@ namespace MaltApp
 
             string appName = textBoxApplicationModule.Text;
 
-            if (appName.Trim().Length <= 0)
+            if (isEmptyString(appName))
             {
                 MessageBox.Show("Please select/enter the application name.");
                 return;
@@ -440,6 +442,10 @@ namespace MaltApp
             request.AddHeader("Accept", "application/xml");
 
             var response = await client.ExecuteGetAsync(request);
+
+            //Clear Gridview current data
+            dataGridViewModules.Rows.Clear();
+            dataGridViewModules.Refresh();
 
             if (!response.IsSuccessful)
             {
@@ -460,10 +466,6 @@ namespace MaltApp
             var result = XElement.Parse(response.Content).Value; //se nao fizer isto aparece o microsoft shit
 
             string xmlWellFormated = RemoveAllNamespaces(result);
-
-            //Clear Gridview current data
-            dataGridViewModules.Rows.Clear();
-            dataGridViewModules.Refresh();
 
 
             // Create an instance of the XmlSerializer class
@@ -490,8 +492,8 @@ namespace MaltApp
 
             int selectedCellCount = dataGridViewModules.GetCellCount(DataGridViewElementStates.Selected);
             btnDeleteModule.Enabled = selectedCellCount > 0;
-            btnCreateData.Enabled = selectedCellCount > 0;
-            textDataContent.Enabled = selectedCellCount > 0;
+            //btnCreateData.Enabled = !isEmptyString(textSelectedModule.Text);
+            //textDataContent.Enabled = !isEmptyString(textSelectedModule.Text); ;
             btnClearModuleSelection.Enabled = selectedCellCount > 0;
         }
 
@@ -502,7 +504,7 @@ namespace MaltApp
             string moduleName = dataGridViewModules.Rows[index].Cells["mname"].Value.ToString();
             string appName = textBoxApplicationModule.Text;
 
-            if (appName.Trim().Length <= 0)
+            if (isEmptyString(appName))
             {
                 MessageBox.Show("Please select/enter the application name.");
                 return;
@@ -555,7 +557,7 @@ namespace MaltApp
             string moduleOldName = textOldModuleName.Text;
             string appName = textBoxApplicationModule.Text;
 
-            if (appName.Trim().Length <= 0)
+            if (isEmptyString(appName))
             {
                 MessageBox.Show("Please select/enter the application name.");
                 return;
@@ -621,7 +623,7 @@ namespace MaltApp
                 return;
             }
 
-            if (appName.Trim().Length <= 0)
+            if (isEmptyString(appName))
             {
                 MessageBox.Show("Please select/enter the application name.");
                 return;
@@ -663,14 +665,15 @@ namespace MaltApp
         private async void btnCreateData_Click(object sender, EventArgs e)
         {
             string appName = textBoxApplicationModule.Text;
-            string modName = selectedModuleData.Text;
+            string modName = textSelectedModule.Text;
             string dataContent = textDataContent.Text;
 
-            if (dataContent.Trim().Length <= 0)
+            if (isEmptyString(dataContent))
             {
                 MessageBox.Show("Please enter the content.");
                 return;
             }
+
 
             btnCreateData.Enabled = false;
 
@@ -684,7 +687,7 @@ namespace MaltApp
             root.AppendChild(data);
             // Create the Name element
             XmlElement name = doc.CreateElement("Content");
-            name.InnerText = textDataContent.Text;
+            name.InnerText = dataContent;
             data.AppendChild(name);
 
             var client = new RestClient(url);
@@ -693,18 +696,30 @@ namespace MaltApp
             request.AddParameter("application/xml", doc, ParameterType.RequestBody);
             RestResponse response = await client.ExecutePostAsync(request);
 
+            if (response.IsSuccessful) 
+            {
+                textDataContent.Text = "";
+            }
+
             string message = XElement.Parse(response.Content).Value;
 
             MessageBox.Show(message);
 
             btnCreateData.Enabled = true;
 
+
         }
 
         private void dataGridViewModules_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            //selectedModuleData.Text = e.RowIndex.ToString();
-            selectedModuleData.Text  = dataGridViewModules.Rows[e.RowIndex].Cells["mname"].Value.ToString() ??  "<Select Module>";
+     
+            string selectedModule = dataGridViewModules.Rows[e.RowIndex].Cells["mname"].Value.ToString();
+
+            selectedModuleData.Text  = selectedModule ??  "<Select Module>";
+            textSelectedModule.Text = selectedModule ?? "";
+
+            btnCreateData.Enabled = !isEmptyString(textSelectedModule.Text);
+            textDataContent.Enabled = !isEmptyString(textSelectedModule.Text); ;
         }
 
         private void btnClearAppSelection_Click(object sender, EventArgs e)
@@ -716,6 +731,9 @@ namespace MaltApp
         private void btnClearModuleSelection_Click(object sender, EventArgs e)
         {
             dataGridViewModules.ClearSelection();
+            textSelectedModule.Text = "";
+            btnCreateData.Enabled = false;
+            textDataContent.Enabled = false;
         }
     }
 }
