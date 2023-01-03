@@ -126,23 +126,22 @@ namespace Subscriber
         private void button1_Click(object sender, EventArgs e)
         {
             MqttClient mqttClient = new MqttClient(textBox1.Text);
+            List<string> mStrTopicsInfo = new List<string>();
+            List<byte> qosLevels = new List<byte>();
+            qosLevels.Add(MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE);
 
-            string[] mStrTopicsInfo = {$"{comboBox1.Text}/{comboBox2.Text}/{comboBox3.Text}" };
-
-            /*
-            if (comboBox3.Text == "Creation")
+            if (comboBox3.Text == "Both")
             {
-                mStrTopicsInfo[0] = $"{comboBox1.Text}/{comboBox2.Text}/Creation";
-            }else if (comboBox3.Text == "Both")
-            {
-                mStrTopicsInfo[0] = $"{comboBox1.Text}/{comboBox2.Text}/Creation";
-                mStrTopicsInfo[1] = $"{comboBox1.Text}/{comboBox2.Text}/Deletion";
+                mStrTopicsInfo.Add($"{comboBox1.Text}/{comboBox2.Text}/Creation");
+                mStrTopicsInfo.Add($"{comboBox1.Text}/{comboBox2.Text}/Deletion");
+                qosLevels.Add(MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE);
             }
             else
             {
-                mStrTopicsInfo[0] = $"{comboBox1.Text}/{comboBox2.Text}/Deletion";
+                mStrTopicsInfo.Add($"{comboBox1.Text}/{comboBox2.Text}/{comboBox3.Text}");
             }
-            */
+
+
 
             mqttClient.Connect(Guid.NewGuid().ToString());
             if (!mqttClient.IsConnected)
@@ -153,8 +152,7 @@ namespace Subscriber
 
             mqttClient.MqttMsgPublishReceived += client_MqttMsgPublishReceived;
 
-            byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE }; //QoS
-            mqttClient.Subscribe(mStrTopicsInfo, qosLevels);
+            mqttClient.Subscribe(mStrTopicsInfo.ToArray(), qosLevels.ToArray());
 
             MessageBox.Show("Connected to Mosquitto!");
         }
