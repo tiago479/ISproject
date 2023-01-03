@@ -174,7 +174,7 @@ namespace Publisher
             data.AppendChild(content);
 
             var client = new RestSharp.RestClient(url);
-            var request = new RestSharp.RestRequest($"{appName}/{modName}", RestSharp.Method.Delete);
+            var request = new RestSharp.RestRequest($"{appName}/{modName}", RestSharp.Method.Post);
             request.RequestFormat = RestSharp.DataFormat.Xml;
             request.AddParameter("application/xml", doc, ParameterType.RequestBody);
             RestSharp.RestResponse response = client.Execute(request);
