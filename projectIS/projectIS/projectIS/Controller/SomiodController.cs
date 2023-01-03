@@ -561,12 +561,12 @@ namespace projectIS.Controller
                     {
                         emptyOrNull(data);
                         DataController controller = new DataController();
-                        bool response = controller.Delete(data.Id);
+                        NotifyChannel(appName, modName, "Deletion", "");
+                        bool response = controller.Delete(data.Content);
                         if (!response)
                         {
                             return BadRequest("Operation Failed");
                         }
-                        NotifyChannel(appName, modName, "deletion", "");
                         return Ok("data was deleted");
                     }
                     catch (Exception exception)

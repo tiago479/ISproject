@@ -150,7 +150,7 @@ namespace Publisher
                 comboBox3.Items.Clear();
                 foreach (Data data in datas)
                 {
-                    comboBox3.Items.Add(data.Id);
+                    comboBox3.Items.Add(data.Content);
                 }
             }
         }
@@ -169,7 +169,7 @@ namespace Publisher
             XmlElement data = doc.CreateElement("Data");
             root.AppendChild(data);
             // Create the Name element
-            XmlElement content = doc.CreateElement("Id");
+            XmlElement content = doc.CreateElement("Content");
             content.InnerText = comboBox3.Text;
             data.AppendChild(content);
 

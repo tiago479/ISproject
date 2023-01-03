@@ -93,7 +93,7 @@ namespace projectIS.Controller
         #endregion
 
         #region Delete
-        public bool Delete(int id)
+        public bool Delete(string content)
         {
             bool validation = false;
             try
@@ -101,9 +101,9 @@ namespace projectIS.Controller
                 conn = new SqlConnection(connectionString);
                 conn.Open();
 
-                string str = "DELETE FROM Datas WHERE Id = @Id";
+                string str = "DELETE FROM Datas WHERE Content = @Content";
                 SqlCommand command = new SqlCommand(str, conn);
-                command.Parameters.AddWithValue("@Id", id);
+                command.Parameters.AddWithValue("@Content", content);
                 int rows = command.ExecuteNonQuery();
                 validation = rows > 0;
                 conn.Close();
