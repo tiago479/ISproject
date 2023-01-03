@@ -464,12 +464,12 @@ namespace projectIS.Controller
         #region Data/Subscrition CRUD
         #region Get all data 
         [HttpGet, Route("{appName}/{modName}")]
-        public IHttpActionResult GetData(string modName)
+        public IHttpActionResult GetData(string appName, string modName)
         {
             try
             {
                 DataController data = new DataController();
-                List<Data> datas = data.GetDatas(modName);
+                List<Data> datas = data.GetDatas(appName, modName);
                 string response = ToXML(datas);
                 return Ok(response);
             }
@@ -506,7 +506,7 @@ namespace projectIS.Controller
                     {
                         emptyOrNull(data);
                         DataController controller = new DataController();
-                        bool response = controller.Create(data, modName);
+                        bool response = controller.Create(data, appName, modName);
                         if (!response)
                         {
                             return BadRequest("Operation Failed");
@@ -529,7 +529,7 @@ namespace projectIS.Controller
                     {
                         emptyOrNull(sub);
                         SubscriptionController controller = new SubscriptionController();
-                        bool response = controller.Create(sub, modName);
+                        bool response = controller.Create(sub, appName, modName);
                         if (!response)
                         {
                             return BadRequest("Operation Failed");
@@ -574,7 +574,7 @@ namespace projectIS.Controller
                         emptyOrNull(data);
                         DataController controller = new DataController();
                         NotifyChannel(appName, modName, "Deletion", "Deleted: "+data.Content);
-                        bool response = controller.Delete(data.Content);
+                        bool response = controller.Delete(appName, modName, data.Content);
                         if (!response)
                         {
                             return BadRequest("Operation Failed");
@@ -592,7 +592,7 @@ namespace projectIS.Controller
                     {
                         emptyOrNull(sub);
                         SubscriptionController controller = new SubscriptionController();
-                        bool response = controller.Delete(sub.Id);
+                        bool response = controller.Delete(appName, modName, sub.Id);
                         if (!response)
                         {
                             return BadRequest("Operation Failed");

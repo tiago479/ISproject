@@ -24,7 +24,7 @@ namespace projectIS.Controller
         }
 
         #region Post
-        public bool Create(Subscription sub, string name)
+        public bool Create(Subscription sub, string appName, string modName)
         {
             bool validation = false;
             try
@@ -33,14 +33,16 @@ namespace projectIS.Controller
                 conn.Open();
 
                 string str = "INSERT INTO Subscription (Name, Creation_dt, Event, EndPoint, Parent) values(@Name, @Creation_dt, @Event, @EndPoint, " +
-                    "(Select Id From Module where Name = @modeName))";
+                                "(Select Id From Module where Name = @modName " +
+                                    "AND Parent = (Select Id From Application Where Name = @appName)))";
                 SqlCommand command = new SqlCommand(str, conn);
                 command.Parameters.AddWithValue("@Name", sub.Name);
                 command.Parameters.AddWithValue("@Event", sub.Event);
                 command.Parameters.AddWithValue("@EndPoint", sub.EndPoint);
                 //command.Parameters.AddWithValue("@EndPoint", "127.0.0.1");
                 command.Parameters.AddWithValue("@Creation_dt", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                command.Parameters.AddWithValue("@modeName", name);
+                command.Parameters.AddWithValue("@modName", modName);
+                command.Parameters.AddWithValue("@appName", appName);
                 int rows = command.ExecuteNonQuery();
                 validation = rows > 0;
                 conn.Close();
@@ -58,7 +60,7 @@ namespace projectIS.Controller
         #endregion
 
         #region Delete
-        public bool Delete(int id)
+        public bool Delete(string appName, string modName, int id)
         {
             bool validation = false;
             try
@@ -66,9 +68,13 @@ namespace projectIS.Controller
                 conn = new SqlConnection(connectionString);
                 conn.Open();
 
-                string str = "DELETE FROM Subscription WHERE Id = @Id";
+                string str = "DELETE FROM Subscription WHERE Id = @Id AND Parent =" +
+                    "(Select Id From Module where Name = @modName " +
+                    "AND Parent = (Select Id From Application Where Name = @appName))";
                 SqlCommand command = new SqlCommand(str, conn);
                 command.Parameters.AddWithValue("@Id", id);
+                command.Parameters.AddWithValue("@modName", modName);
+                command.Parameters.AddWithValue("@appName", appName);
                 int rows = command.ExecuteNonQuery();
                 validation = rows > 0;
                 conn.Close();

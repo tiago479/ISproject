@@ -22,17 +22,18 @@ namespace projectIS.Controller
         }
 
         #region Get All
-        public List<Data> GetDatas(string name)
+        public List<Data> GetDatas(string appName, string modName)
         {
-
             try
             {
                 conn = new SqlConnection(connectionString);
                 conn.Open();
 
-                SqlCommand command = new SqlCommand("SELECT * FROM Datas WHERE Parent in " +
-                    "(SELECT Id FROM Module WHERE Name = @appName)", conn);
-                command.Parameters.AddWithValue("@appName", name);
+                SqlCommand command = new SqlCommand("SELECT * FROM Datas WHERE Parent = " +
+                    "(SELECT Id FROM Module WHERE Name = @modName " +
+                    "AND Parent = (Select Id From Application Where Name = @appName))", conn);
+                command.Parameters.AddWithValue("@modName", modName);
+                command.Parameters.AddWithValue("@appName", appName);
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
@@ -63,7 +64,7 @@ namespace projectIS.Controller
         #endregion
 
         #region Post
-        public bool Create(Data data, string name)
+        public bool Create(Data data, string appName, string modName)
         {
             bool validation = false;
             try
@@ -71,11 +72,13 @@ namespace projectIS.Controller
                 conn = new SqlConnection(connectionString);
                 conn.Open();
                 string str = "INSERT INTO Datas (Content, Creation_dt, Parent) values(@Content, @Creation_dt, " +
-                    "(Select Id From Module where Name = @appName))";
+                    "(Select Id From Module where Name = @modName " +
+                    "AND Parent = (Select Id From Application Where Name = @appName)))";
                 SqlCommand command = new SqlCommand(str, conn);
                 command.Parameters.AddWithValue("@Content", data.Content);
                 command.Parameters.AddWithValue("@Creation_dt", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                command.Parameters.AddWithValue("@appName", name);
+                command.Parameters.AddWithValue("@modName", modName);
+                command.Parameters.AddWithValue("@appName", appName);
                 int rows = command.ExecuteNonQuery();
                 validation = rows > 0;
                 conn.Close();
@@ -93,7 +96,7 @@ namespace projectIS.Controller
         #endregion
 
         #region Delete
-        public bool Delete(string content)
+        public bool Delete(string appName, string modName, string content)
         {
             bool validation = false;
             try
@@ -101,9 +104,13 @@ namespace projectIS.Controller
                 conn = new SqlConnection(connectionString);
                 conn.Open();
 
-                string str = "DELETE FROM Datas WHERE Content = @Content";
+                string str = "DELETE FROM Datas WHERE Content = @Content AND Parent =" +
+                    "(Select Id From Module where Name = @modName " +
+                    "AND Parent = (Select Id From Application Where Name = @appName)))";
                 SqlCommand command = new SqlCommand(str, conn);
                 command.Parameters.AddWithValue("@Content", content);
+                command.Parameters.AddWithValue("@modName", modName);
+                command.Parameters.AddWithValue("@appName", appName);
                 int rows = command.ExecuteNonQuery();
                 validation = rows > 0;
                 conn.Close();

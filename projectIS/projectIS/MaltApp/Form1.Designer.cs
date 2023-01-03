@@ -81,6 +81,14 @@
             this.label12 = new System.Windows.Forms.Label();
             this.textDataContent = new System.Windows.Forms.TextBox();
             this.btnCreateData = new System.Windows.Forms.Button();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.textBoxEndpoint = new System.Windows.Forms.TextBox();
+            this.comboBoxEvent = new System.Windows.Forms.ComboBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.textSubName = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.btnCreateSub = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewApp)).BeginInit();
             this.groupCreateNewApplication.SuspendLayout();
@@ -92,6 +100,7 @@
             this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.selectedModuleData.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnGetAllApp
@@ -628,11 +637,92 @@
             this.btnCreateData.UseVisualStyleBackColor = true;
             this.btnCreateData.Click += new System.EventHandler(this.btnCreateData_Click);
             // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.btnCreateSub);
+            this.groupBox7.Controls.Add(this.label16);
+            this.groupBox7.Controls.Add(this.textSubName);
+            this.groupBox7.Controls.Add(this.label14);
+            this.groupBox7.Controls.Add(this.textBoxEndpoint);
+            this.groupBox7.Controls.Add(this.comboBoxEvent);
+            this.groupBox7.Controls.Add(this.label15);
+            this.groupBox7.Location = new System.Drawing.Point(726, 134);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(338, 191);
+            this.groupBox7.TabIndex = 10;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Subscription";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(6, 104);
+            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(50, 13);
+            this.label14.TabIndex = 15;
+            this.label14.Text = "EndPoint";
+            // 
+            // textBoxEndpoint
+            // 
+            this.textBoxEndpoint.Location = new System.Drawing.Point(9, 119);
+            this.textBoxEndpoint.Margin = new System.Windows.Forms.Padding(2);
+            this.textBoxEndpoint.Name = "textBoxEndpoint";
+            this.textBoxEndpoint.Size = new System.Drawing.Size(323, 20);
+            this.textBoxEndpoint.TabIndex = 14;
+            // 
+            // comboBoxEvent
+            // 
+            this.comboBoxEvent.FormattingEnabled = true;
+            this.comboBoxEvent.Items.AddRange(new object[] {
+            "Creation",
+            "Deletion"});
+            this.comboBoxEvent.Location = new System.Drawing.Point(9, 79);
+            this.comboBoxEvent.Name = "comboBoxEvent";
+            this.comboBoxEvent.Size = new System.Drawing.Size(323, 21);
+            this.comboBoxEvent.TabIndex = 13;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(6, 63);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(35, 13);
+            this.label15.TabIndex = 12;
+            this.label15.Text = "Event";
+            // 
+            // textSubName
+            // 
+            this.textSubName.Location = new System.Drawing.Point(9, 40);
+            this.textSubName.Name = "textSubName";
+            this.textSubName.Size = new System.Drawing.Size(323, 20);
+            this.textSubName.TabIndex = 16;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(6, 20);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(35, 13);
+            this.label16.TabIndex = 17;
+            this.label16.Text = "Name";
+            // 
+            // btnCreateSub
+            // 
+            this.btnCreateSub.Location = new System.Drawing.Point(9, 155);
+            this.btnCreateSub.Name = "btnCreateSub";
+            this.btnCreateSub.Size = new System.Drawing.Size(323, 28);
+            this.btnCreateSub.TabIndex = 11;
+            this.btnCreateSub.Text = "Create Subscription";
+            this.btnCreateSub.UseVisualStyleBackColor = true;
+            this.btnCreateSub.Click += new System.EventHandler(this.btnCreateSub_Click);
+            // 
             // SOMIOD
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1073, 561);
+            this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.selectedModuleData);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
@@ -665,6 +755,8 @@
             this.groupBox6.PerformLayout();
             this.selectedModuleData.ResumeLayout(false);
             this.selectedModuleData.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -723,6 +815,14 @@
         private System.Windows.Forms.Button btnClearModuleSelection;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox textSelectedModule;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox textSubName;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TextBox textBoxEndpoint;
+        private System.Windows.Forms.ComboBox comboBoxEvent;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Button btnCreateSub;
     }
 }
 

@@ -664,9 +664,9 @@ namespace MaltApp
 
         private async void btnCreateData_Click(object sender, EventArgs e)
         {
-            string appName = textBoxApplicationModule.Text;
-            string modName = textSelectedModule.Text;
-            string dataContent = textDataContent.Text;
+            string appName = RemoveSpecialChars(textBoxApplicationModule.Text);
+            string modName = RemoveSpecialChars(textSelectedModule.Text);
+            string dataContent = RemoveSpecialChars(textDataContent.Text);
 
             if (isEmptyString(dataContent))
             {
@@ -734,6 +734,98 @@ namespace MaltApp
             textSelectedModule.Text = "";
             btnCreateData.Enabled = false;
             textDataContent.Enabled = false;
+        }
+
+        private async void btnCreateSub_Click(object sender, EventArgs e)
+        {
+            string appName = RemoveSpecialChars(textBoxApplicationModule.Text);
+            string modName = RemoveSpecialChars(textSelectedModule.Text);
+            string subName = RemoveSpecialChars(textSubName.Text);
+            string EndPointValue = textBoxEndpoint.Text;
+
+        
+
+
+           
+            if (isEmptyString(appName))
+            {
+                MessageBox.Show("Please select app.");
+                return;
+            }
+
+            if (isEmptyString(modName))
+            {
+                MessageBox.Show("Please select a module.");
+                return;
+            }
+
+            if (isEmptyString(subName))
+            {
+                MessageBox.Show("Please enter the subscription name.");
+                return;
+            }
+
+            if (comboBoxEvent.SelectedIndex < 0)
+            {
+                MessageBox.Show("Please select an Event.");
+                return;
+            }
+
+
+            if (isEmptyString(EndPointValue))
+            {
+                MessageBox.Show("Please enter the endpoint.");
+                return;
+            }
+
+
+          
+
+            string eventTypeName = comboBoxEvent.SelectedItem.ToString();
+
+            btnCreateSub.Enabled = false;
+
+            XmlDocument doc = new XmlDocument();
+            // Create the root element
+            XmlElement root = doc.CreateElement("Resource");
+            root.SetAttribute("type", "Subscription");
+            doc.AppendChild(root);
+
+            // Create the Application element
+            XmlElement subscription = doc.CreateElement("Subscription");
+            root.AppendChild(subscription);
+
+            // Create the Name element
+            XmlElement name = doc.CreateElement("Name");
+            name.InnerText = subName;
+            subscription.AppendChild(name);
+
+            // Create the eventType element
+            XmlElement eventType = doc.CreateElement("Event");
+            eventType.InnerText = eventTypeName;
+            subscription.AppendChild(eventType);
+
+            // Create the eventType element
+            XmlElement EndPoint = doc.CreateElement("EndPoint");
+            EndPoint.InnerText = EndPointValue;
+            subscription.AppendChild(EndPoint);
+
+            var client = new RestClient(url);
+            var request = new RestRequest($"{appName}/{modName}");
+            request.RequestFormat = DataFormat.Xml;
+            request.AddParameter("application/xml", doc, ParameterType.RequestBody);
+            RestResponse response = await client.ExecutePostAsync(request);
+
+            if (response.IsSuccessful)
+            {
+                textSubName.Text = "";
+            }
+
+            string message = XElement.Parse(response.Content).Value;
+
+            MessageBox.Show(message);
+
+            btnCreateSub.Enabled = true;
         }
     }
 }
