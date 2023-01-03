@@ -513,7 +513,7 @@ namespace projectIS.Controller
                         }
 
                         //criar metodo notifyChannel para ir buscar endPoint  
-
+                        NotifyChannel(appName, modName, "Creation", "Created: "+data.Content);
                         //enviar notificacao para o canal (mosquitto)
                         return Ok("A new data was created");
                     }
@@ -573,12 +573,12 @@ namespace projectIS.Controller
                     {
                         emptyOrNull(data);
                         DataController controller = new DataController();
-                        bool response = controller.Delete(data.Id);
+                        NotifyChannel(appName, modName, "Deletion", "Deleted: "+data.Content);
+                        bool response = controller.Delete(data.Content);
                         if (!response)
                         {
                             return BadRequest("Operation Failed");
                         }
-                        NotifyChannel(appName, modName, "deletion", "");
                         return Ok("data was deleted");
                     }
                     catch (Exception exception)

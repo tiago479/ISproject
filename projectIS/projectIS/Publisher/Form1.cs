@@ -150,7 +150,7 @@ namespace Publisher
                 comboBox3.Items.Clear();
                 foreach (Data data in datas)
                 {
-                    comboBox3.Items.Add(data.Id);
+                    comboBox3.Items.Add(data.Content);
                 }
             }
         }
@@ -169,7 +169,34 @@ namespace Publisher
             XmlElement data = doc.CreateElement("Data");
             root.AppendChild(data);
             // Create the Name element
-            XmlElement content = doc.CreateElement("Id");
+            XmlElement content = doc.CreateElement("Content");
+            content.InnerText = comboBox3.Text;
+            data.AppendChild(content);
+
+            var client = new RestSharp.RestClient(url);
+            var request = new RestSharp.RestRequest($"{appName}/{modName}", RestSharp.Method.Post);
+            request.RequestFormat = RestSharp.DataFormat.Xml;
+            request.AddParameter("application/xml", doc, ParameterType.RequestBody);
+            RestSharp.RestResponse response = client.Execute(request);
+
+            MessageBox.Show(response.ResponseStatus.ToString());
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string appName = comboBox1.Text;
+            string modName = comboBox2.Text;
+
+            XmlDocument doc = new XmlDocument();
+            // Create the root element
+            XmlElement root = doc.CreateElement("Resource");
+            root.SetAttribute("type", "Data");
+            doc.AppendChild(root);
+            // Create the Application element
+            XmlElement data = doc.CreateElement("Data");
+            root.AppendChild(data);
+            // Create the Name element
+            XmlElement content = doc.CreateElement("Content");
             content.InnerText = comboBox3.Text;
             data.AppendChild(content);
 
