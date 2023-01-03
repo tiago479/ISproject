@@ -150,7 +150,7 @@ namespace Publisher
                 comboBox3.Items.Clear();
                 foreach (Data data in datas)
                 {
-                    comboBox3.Items.Add(data.Content);
+                    comboBox3.Items.Add(data.Id);
                 }
             }
         }
@@ -169,12 +169,12 @@ namespace Publisher
             XmlElement data = doc.CreateElement("Data");
             root.AppendChild(data);
             // Create the Name element
-            XmlElement content = doc.CreateElement("Content");
+            XmlElement content = doc.CreateElement("Id");
             content.InnerText = comboBox3.Text;
             data.AppendChild(content);
 
             var client = new RestSharp.RestClient(url);
-            var request = new RestSharp.RestRequest($"{appName}/{modName}", RestSharp.Method.Post);
+            var request = new RestSharp.RestRequest($"{appName}/{modName}", RestSharp.Method.Delete);
             request.RequestFormat = RestSharp.DataFormat.Xml;
             request.AddParameter("application/xml", doc, ParameterType.RequestBody);
             RestSharp.RestResponse response = client.Execute(request);

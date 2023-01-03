@@ -16,7 +16,8 @@ using System.Xml.Serialization;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Application = projectIS.Model.Application;
 using Module = projectIS.Model.Module;
-
+using uPLibrary.Networking.M2Mqtt;
+using uPLibrary.Networking.M2Mqtt.Messages;
 namespace Subscriber
 {
     public partial class Form1 : Form
@@ -47,6 +48,16 @@ namespace Subscriber
                 return xElement;
             }
             return new XElement(xmlDocument.Name.LocalName, xmlDocument.Elements().Select(el => RemoveAllNamespaces(el))); //recursivo .... 0> (lambda expression(=>) method call para o parametro el ...)
+        }
+
+        private void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
+        {
+            String status = "";
+            MessageBox.Show("Received = " + Encoding.UTF8.GetString(e.Message));
+            status = Encoding.UTF8.GetString(e.Message);
+
+            richTextBox1.BeginInvoke((MethodInvoker)delegate { richTextBox1.Text = $"{comboBox3.Text}" + " " + $"{status}"; });
+
         }
 
         #endregion
@@ -114,32 +125,46 @@ namespace Subscriber
      
         private void button1_Click(object sender, EventArgs e)
         {
-            string appName = comboBox1.Text;
-            string modName = comboBox2.Text;
+            MqttClient mqttClient = new MqttClient(textBox1.Text);
 
-            XmlDocument doc = new XmlDocument();
-            // Create the root element
-            XmlElement root = doc.CreateElement("Resource");
-            root.SetAttribute("type", "Subscription");
-            doc.AppendChild(root);
-            // Create the Subscritipon element
-            XmlElement sub = doc.CreateElement("Subscription");
-            root.AppendChild(sub);
-            // Create the Subname element
-            XmlElement name = doc.CreateElement("Name");
-            name.InnerText = comboBox1.Text + comboBox3.Text;
-            sub.AppendChild(name);
+            string[] mStrTopicsInfo = {$"{comboBox1.Text}/{comboBox2.Text}/{comboBox3.Text}" };
 
-            var client = new RestSharp.RestClient(url);
-            var request = new RestSharp.RestRequest($"{appName}/{modName}", RestSharp.Method.Post);
-            request.RequestFormat = RestSharp.DataFormat.Xml;
-            request.AddParameter("application/xml", doc, ParameterType.RequestBody);
-            RestSharp.RestResponse response = client.Execute(request);
+            /*
+            if (comboBox3.Text == "Creation")
+            {
+                mStrTopicsInfo[0] = $"{comboBox1.Text}/{comboBox2.Text}/Creation";
+            }else if (comboBox3.Text == "Both")
+            {
+                mStrTopicsInfo[0] = $"{comboBox1.Text}/{comboBox2.Text}/Creation";
+                mStrTopicsInfo[1] = $"{comboBox1.Text}/{comboBox2.Text}/Deletion";
+            }
+            else
+            {
+                mStrTopicsInfo[0] = $"{comboBox1.Text}/{comboBox2.Text}/Deletion";
+            }
+            */
 
-            MessageBox.Show(response.ResponseStatus.ToString());
+            mqttClient.Connect(Guid.NewGuid().ToString());
+            if (!mqttClient.IsConnected)
+            {
+                MessageBox.Show("Error connecting to mosquitto...");
+                return;
+            }
+
+            mqttClient.MqttMsgPublishReceived += client_MqttMsgPublishReceived;
+
+            byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE }; //QoS
+            mqttClient.Subscribe(mStrTopicsInfo, qosLevels);
+
+            MessageBox.Show("Connected to Mosquitto!");
         }
 
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void eventClick3(object sender, EventArgs e)
         {
             comboBox3.Items.Clear();
             comboBox3.Items.Add("Creation");
