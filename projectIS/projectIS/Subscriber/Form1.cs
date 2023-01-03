@@ -54,20 +54,11 @@ namespace Subscriber
             return new XElement(xmlDocument.Name.LocalName, xmlDocument.Elements().Select(el => RemoveAllNamespaces(el))); //recursivo .... 0> (lambda expression(=>) method call para o parametro el ...)
         }
 
-        //private void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
-        //{
-        //    String status = "";
-        //    MessageBox.Show("Received = " + Encoding.UTF8.GetString(e.Message));
-        //    status = Encoding.UTF8.GetString(e.Message);
-
-        //    richTextBox1.BeginInvoke((MethodInvoker)delegate { richTextBox1.AppendText($"{comboBox3.Text}" + " " + $"{status} {Environment.NewLine}"); });
-
-        //}
 
         private void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
-            String status = "";
-            MessageBox.Show("Received = " + Encoding.UTF8.GetString(e.Message));
+            string status = "";
+            //MessageBox.Show("Received = " + Encoding.UTF8.GetString(e.Message));
             status = Encoding.UTF8.GetString(e.Message);
             richTextBox1.BeginInvoke((MethodInvoker)delegate { richTextBox1.AppendText($"{comboBox3.Text}" + " " + $"{status} {Environment.NewLine}"); });
             if (status == "Created: on")
@@ -231,12 +222,22 @@ namespace Subscriber
                 mStrTopicsInfo.Add($"{comboBox1.Text}/{comboBox2.Text}/{comboBox3.Text}");
             }
 
-            mqttClient.Connect(Guid.NewGuid().ToString());
+            try
+            {
+
+                mqttClient.Connect(Guid.NewGuid().ToString());
+
+            }catch 
+            {
+                MessageBox.Show("Error connecting to mosquitto...");
+                return;
+            }
+
+            
 
 
             if (!mqttClient.IsConnected)
             {
-                MessageBox.Show("Error connecting to mosquitto...");
                 lblStatus.Text = "Disconnected";
                 return;
             }

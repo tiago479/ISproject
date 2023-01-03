@@ -49,6 +49,7 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.btnUsub = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -250,9 +251,9 @@
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(12, 274);
+            this.listBox1.Location = new System.Drawing.Point(12, 287);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(271, 69);
+            this.listBox1.Size = new System.Drawing.Size(271, 56);
             this.listBox1.TabIndex = 18;
             // 
             // btnUsub
@@ -265,11 +266,21 @@
             this.btnUsub.UseVisualStyleBackColor = true;
             this.btnUsub.Click += new System.EventHandler(this.btnUsub_Click);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(9, 271);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(70, 13);
+            this.label7.TabIndex = 20;
+            this.label7.Text = "Subscriptions";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 383);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.btnUsub);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.pictureBox2);
@@ -315,6 +326,7 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Button btnUsub;
+        private System.Windows.Forms.Label label7;
     }
 }
 

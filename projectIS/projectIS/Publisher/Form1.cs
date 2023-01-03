@@ -262,10 +262,21 @@ namespace Publisher
             request.AddParameter("application/xml", doc, ParameterType.RequestBody);
             RestResponse response = await client.ExecutePostAsync(request);
 
-            MessageBox.Show(response.ResponseStatus.ToString());
+            try
+            {
+                string message = XElement.Parse(response.Content).Value;
+                MessageBox.Show(message);
+
+            }
+            catch
+            {
+                MessageBox.Show("Error parsing server response.");
+            }
+
+
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             string appName = comboBox1.Text;
             string modName = comboBox2.Text;
@@ -283,13 +294,23 @@ namespace Publisher
             content.InnerText = comboBox3.Text;
             data.AppendChild(content);
 
-            var client = new RestSharp.RestClient(url);
-            var request = new RestSharp.RestRequest($"{appName}/{modName}", RestSharp.Method.Delete);
-            request.RequestFormat = RestSharp.DataFormat.Xml;
+            var client = new RestClient(url);
+            var request = new RestRequest($"{appName}/{modName}", Method.Delete);
+            request.RequestFormat = DataFormat.Xml;
             request.AddParameter("application/xml", doc, ParameterType.RequestBody);
-            RestSharp.RestResponse response = client.Execute(request);
+            RestResponse response = await client.ExecuteAsync(request);
 
-            MessageBox.Show(response.ResponseStatus.ToString());
+            try
+            {
+                string message = XElement.Parse(response.Content).Value;
+                MessageBox.Show(message);
+
+            }
+            catch
+            {
+                MessageBox.Show("Error parsing server response.");
+            }
+
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
