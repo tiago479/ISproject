@@ -9,7 +9,7 @@ namespace projectIS.Model
     {
         public string Name { get; set; }
         public int Parent { get; set; }
-        public string Event { get; set; }
         public string EndPoint { get; set; }
+        public string Event { get; set; }
     }
 }

@@ -3,16 +3,24 @@ using projectIS.Validators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
+using System.Text;
 using System.Web.Http;
 using System.Web.UI.WebControls;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using uPLibrary.Networking.M2Mqtt;
+using static System.Net.Mime.MediaTypeNames;
+using Application = projectIS.Model.Application;
+using Module = projectIS.Model.Module;
 
 namespace projectIS.Controller
 {
@@ -43,6 +51,73 @@ namespace projectIS.Controller
                     return null;
             }
         }
+        #endregion
+
+        #region MQTT
+        private void NotifyChannel(string application, string module, string eventType, string content)
+        {
+            try
+            {
+                List<string> endpoints = GetAllSubscriptionEndpoint(module, eventType);
+
+                foreach (var endpoint in endpoints)
+                {
+                    Debug.WriteLine($"Enspoint for channel'{endpoint}'");
+                    // MqttClient mClient = new MqttClient(IPAddress.Parse(endpoint));
+                    MqttClient mClient = new MqttClient(endpoint);
+
+                    mClient.Connect(Guid.NewGuid().ToString());
+
+                    if (!mClient.IsConnected)
+                    {
+                        Console.WriteLine("Error connecting to message broker...");
+                        return;
+                    }
+
+                    mClient.Publish($"{application}/{module}/{eventType}", Encoding.UTF8.GetBytes(content));
+
+                    System.Threading.Thread.Sleep(500);
+                    mClient.Disconnect();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error notifying channel'{application}/{module}/{eventType}': {ex.Message}");
+            }
+        }
+
+        private List<string> GetAllSubscriptionEndpoint(string moduleName, string eventType)
+        {
+            List<string> endPoints = new List<string>();
+            string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["projectIS.Properties.Settings.ConnDB"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand("SELECT DISTINCT EndPoint FROM Subscription where Event=@event and Parent = " +
+                        "(SELECT Id FROM Module WHERE Name = @parent)", connection);
+                    command.Parameters.AddWithValue("@event", eventType);
+                    command.Parameters.AddWithValue("@parent", moduleName);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string endPoint = (string)reader["EndPoint"];
+                            endPoints.Add(endPoint);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error getting endpoints for module '{moduleName}': ${ex.ToString()}");
+                }
+            }
+
+            return endPoints;
+        }
+
         #endregion
 
         #region Bad Request Method
@@ -387,10 +462,27 @@ namespace projectIS.Controller
         #endregion
 
         #region Data/Subscrition CRUD
+        #region Get all data 
+        [HttpGet, Route("{appName}/{modName}")]
+        public IHttpActionResult GetData(string modName)
+        {
+            try
+            {
+                DataController data = new DataController();
+                List<Data> datas = data.GetDatas(modName);
+                string response = ToXML(datas);
+                return Ok(response);
+            }
+            catch (Exception exception)
+            {
+                return InternalServerError(exception);
+            }
+        }
+        #endregion
 
-        #region Post a new Data
+        #region Post a new Data/Subscrition
         [HttpPost, Route("{appName}/{modName}")]
-        public IHttpActionResult PostData(string modName, [FromBody] XElement xml)
+        public IHttpActionResult PostData(string appName,string modName, [FromBody] XElement xml)
         {
             if (xml == null)
             {
@@ -419,11 +511,9 @@ namespace projectIS.Controller
                         {
                             return BadRequest("Operation Failed");
                         }
+
                         //criar metodo notifyChannel para ir buscar endPoint  
-                        /*
-                          MqttClient mClient = new MqttClient(IPAddress.Parse(endpoint));
-                           string[] mStrTopicsInfo = { "news", "complaints" };
-                         */ 
+
                         //enviar notificacao para o canal (mosquitto)
                         return Ok("A new data was created");
                     }
@@ -458,9 +548,9 @@ namespace projectIS.Controller
         }
         #endregion
 
-        #region Delete an Data
+        #region Delete an Data/Subscrition
         [HttpDelete, Route("{appName}/{modName}")]
-        public IHttpActionResult DeleteData([FromBody] XElement xml)
+        public IHttpActionResult DeleteData([FromBody] XElement xml, string appName, string modName)
         {
             if (xml == null)
             {
@@ -488,6 +578,7 @@ namespace projectIS.Controller
                         {
                             return BadRequest("Operation Failed");
                         }
+                        NotifyChannel(appName, modName, "deletion", "");
                         return Ok("data was deleted");
                     }
                     catch (Exception exception)
@@ -578,9 +669,9 @@ namespace projectIS.Controller
         }
         #endregion
         */
-                        #endregion
+        #endregion
 
-                        #endregion
+        #endregion
 
-                    }
+    }
 }
