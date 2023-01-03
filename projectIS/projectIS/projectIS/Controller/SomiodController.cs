@@ -82,6 +82,10 @@ namespace projectIS.Controller
             {
                 ApplicationController controller = new ApplicationController();
                 List<Application> applications = controller.GetApplications();
+                if (applications.Count <= 0)
+                {
+                    return BadRequest("Cannot find any applcation.");
+                }
                 string response = ToXML(applications);
                 return Ok(response);
             }
@@ -100,6 +104,7 @@ namespace projectIS.Controller
             {
                 ApplicationController controller = new ApplicationController();
                 Application application = controller.GetApplication(id);
+                emptyOrNull(application);
                 string response = ToXML(application);
                 return Ok(response);
             }
@@ -114,6 +119,7 @@ namespace projectIS.Controller
         [HttpPost, Route("")]
         public IHttpActionResult PostApplication([FromBody] XElement xml)
         {
+     
             if (xml == null)
             {
                 return BadRequest(new XmlException("Errors in the XML document").ToString());
@@ -138,6 +144,8 @@ namespace projectIS.Controller
                 {
                     return BadRequest("Operation Failed");
                 }
+    
+               // return Ok(new Success { Message = "A new application was created" });
                 return Ok("A new application was created");
             }
             catch (Exception exception)
@@ -210,9 +218,9 @@ namespace projectIS.Controller
                 bool response = controller.Delete(app.Name);
                 if (!response)
                 {
-                    return BadRequest("Operation Failed");
+                    return BadRequest($"Cannot Delete: {app.Name}");
                 }
-                return Ok("Application was deleted");
+                return Ok($"Application {app.Name} was deleted");
             }
             catch (Exception exception)
             {
@@ -233,6 +241,10 @@ namespace projectIS.Controller
             {
                 ModuleController controller = new ModuleController();
                 List<Module> modules = controller.GetModules(appName);
+                if (modules.Count <= 0)
+                {
+                    return BadRequest($"Cannot find modules for: {appName}");
+                }
                 string response = ToXML(modules);
                 return Ok(response);
             }
